@@ -3,6 +3,7 @@ package Myaong.Gangajikimi.common.exception;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,7 +42,7 @@ public class GlobalExceptionHandler {
         String errorMessage = e.getBindingResult()
                 .getAllErrors()
                 .stream()
-                .map(error -> error.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
 
         return GlobalResponse.onFailure(errorCode, errorMessage);
