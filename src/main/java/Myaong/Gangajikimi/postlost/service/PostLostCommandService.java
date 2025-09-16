@@ -27,7 +27,8 @@ public class PostLostCommandService {
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
 
-        PostLost newPostLost = PostLost.of(member,
+        PostLost newPostLost = PostLost.of(request.getDogImages(),
+                member,
                 request.getTitle(),
                 request.getDogName(),
                 dogType,

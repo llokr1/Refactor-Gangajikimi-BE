@@ -61,7 +61,8 @@ public class PostLost extends BaseEntity {
     private List<String> realImage; // 실제 사진 (URL 또는 파일 경로 리스트)
 
     @Builder
-    private PostLost(Member member,
+    private PostLost(List<String> realImage,
+                     Member member,
                      String title,
                      String dogName,
                      DogType dogType,
@@ -71,6 +72,7 @@ public class PostLost extends BaseEntity {
                      Point lostSpot,
                      LocalDate lostDate,
                      LocalDateTime lostTime){
+        this.realImage = realImage;
         this.member = member;
         this.title = title;
         this.dogName = dogName;
@@ -83,17 +85,19 @@ public class PostLost extends BaseEntity {
         this.lostTime = lostTime;
     }
 
-    public static PostLost of(Member member,
-                       String title,
-                       String dogName,
-                       DogType dogType,
-                       DogGender dogGender,
-                       String dogColor,
-                       String content,
-                       Point lostSpot,
-                       LocalDate lostDate,
-                       LocalDateTime lostTime){
+    public static PostLost of(List<String> realImage,
+                              Member member,
+                              String title,
+                              String dogName,
+                              DogType dogType,
+                              DogGender dogGender,
+                              String dogColor,
+                              String content,
+                              Point lostSpot,
+                              LocalDate lostDate,
+                              LocalDateTime lostTime){
         return PostLost.builder()
+                .realImage(realImage)
                 .member(member)
                 .title(title)
                 .dogName(dogName)
