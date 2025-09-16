@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/api/auth/signup",
                                 "/api/auth/login",
-                                "/api/auth/refresh").permitAll()
+                                "/api/auth/refresh",
+                            "/ws-chat/**").permitAll() // 웹소켓 연동 허용
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
