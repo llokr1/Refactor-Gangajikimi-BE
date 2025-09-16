@@ -1,6 +1,10 @@
 package Myaong.Gangajikimi.auth.jwt;
 
+import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.exception.GeneralException;
+import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.member.entity.Member;
+import Myaong.Gangajikimi.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +20,7 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class JwtTokenProvider {
     public Long jwtExpiration;
     @Value("${jwt.refresh.expiration}")
     public Long refreshExpiration;
+    private final MemberRepository memberRepository;
 
     private Key getSigningKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes());
@@ -37,16 +43,28 @@ public class JwtTokenProvider {
 
     // 사용자 정보를 바탕으로 토큰 생성
     public String generateAccessToken(Authentication authentication){
-        // Authentication 객체로부터 사용자 정보를 가져온다.
-        String email = authentication.getName();
-        // Authorities의 두 번째 값이 role 값이다.
-        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        Object principal = authentication.getPrincipal();
+        Long memberId;
+        String role;
 
-        log.info("{} : 토큰 생성 완료", email);
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            memberId = userDetails.getId();
+            role = userDetails.getAuthorities().iterator().next().getAuthority();
+        } else {
+            // fallback: principal이 String(email)일 때
+            String email = principal.toString();
+            Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+            memberId = member.getId();
+            role = member.getRole().toString();
+        }
+
+        log.info("{} : 토큰 생성 완료", memberId);
 
         return Jwts.builder()
                 // 토큰 제목 설정
-                .setSubject(email)
+                .setSubject(memberId.toString())
                 // Payload의 role claim 정보를 입력
                 .claim("role", role)
                 // 발급 날짜 설정
@@ -100,10 +118,14 @@ public class JwtTokenProvider {
 
         Claims claims = parseClaimsFromToken(token);
 
-        String email = claims.getSubject();
-        String role =claims.get("role", String.class);
+        String id = claims.getSubject();      // memberId
+        Long memberId = Long.parseLong(id);
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
 
-        User principal = new User(email, "", Collections.singleton(() -> role));
+        Member member = optionalMember.orElseThrow(()-> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+
+        CustomUserDetails principal = new CustomUserDetails(member);
+
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 

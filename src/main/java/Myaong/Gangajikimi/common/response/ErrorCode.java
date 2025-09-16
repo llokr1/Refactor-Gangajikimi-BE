@@ -19,7 +19,16 @@ public enum ErrorCode {
     INVALIDATE_PASSWORD(HttpStatus.UNAUTHORIZED, "AUTH403", "비밀번호가 일치하지 않습니다."),
 
     // MEMBER
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER400", "존재하지 않는 회원 ID입니다.");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER400", "존재하지 않는 회원 ID입니다."),
+
+    // MESSAGE
+    MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MESSAGE400", "해당 메세지는 존재하지 않습니다."),
+
+    //CHATROOM
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CHATROOM400", "해당 채팅방은 존재하지 않습니다.");
+
+
+
     private final HttpStatus status;
     private final String code;
     private final String message;

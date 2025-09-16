@@ -11,28 +11,28 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final
-    MemberRepository memberRepository;
+	private final
+	MemberRepository memberRepository;
 
-    public Member findMemberById(Long memberId){
+	public Member findMemberById(Long memberId){
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return member;
-    }
+		return member;
+	}
 
-    public Member findMemberByEmail(String email){
+	public Member findMemberByEmail(String email){
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+		Member member = memberRepository.findByEmail(email)
+			.orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return member;
-    }
+		return member;
+	}
 
-    public Member saveMember(Member member){
+	public Member saveMember(Member member){
 
-        return memberRepository.save(member);
+		return memberRepository.save(member);
 
-    }
+	}
 }
