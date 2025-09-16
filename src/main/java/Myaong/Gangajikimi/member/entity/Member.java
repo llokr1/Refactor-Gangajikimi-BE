@@ -20,76 +20,76 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-    @Column(nullable = false)
-    private String memberName;
+	@Column(nullable = false)
+	private String memberName;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(nullable = false)
+	private String email;
 
-    @Column
-    private String password;
+	@Column
+	private String password;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+	@Column
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
-    @Column(nullable = false)
-    private Integer age;
+	@Column(nullable = false)
+	private Integer age;
 
-    @Column(nullable = false)
-    private String address;
+	@Column(nullable = false)
+	private String address;
 
-    @Column(nullable = false)
-    private String specAddress;
+	@Column(nullable = false)
+	private String specAddress;
 
-    @Column(nullable = false)
-    @ColumnDefault("'USER'")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+	@Column(nullable = false)
+	@ColumnDefault("'USER'")
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-    @Column(nullable = false)
-    @ColumnDefault("'ACTIVATED'")
-    @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus;
+	@Column(nullable = false)
+	@ColumnDefault("'ACTIVATED'")
+	@Enumerated(EnumType.STRING)
+	private AccountStatus accountStatus;
 
-    @Builder
-    private Member(String memberName, String email, String password, String gender, Integer age, String address, String specAddress){
+	@Builder
+	private Member(String memberName, String email, String password, String gender, Integer age, String address, String specAddress){
 
-        this.memberName = memberName;
-        this.email = email;
-        this.password = password;
+		this.memberName = memberName;
+		this.email = email;
+		this.password = password;
 
-        if (gender.equals("MALE")) this.gender = Gender.MALE;
-        else if (gender.equals("FEMALE")) this.gender = Gender.MALE;
+		if (gender.equals("MALE")) this.gender = Gender.MALE;
+		else if (gender.equals("FEMALE")) this.gender = Gender.MALE;
 
-        this.age = age;
-        this.address = address;
-        this.specAddress = specAddress;
-        this.role = Role.USER;
-        this.accountStatus = AccountStatus.ACTIVATED;
-    }
+		this.age = age;
+		this.address = address;
+		this.specAddress = specAddress;
+		this.role = Role.USER;
+		this.accountStatus = AccountStatus.ACTIVATED;
+	}
 
-    public static Member of(SignupRequest request, String encryptedPassword){
+	public static Member of(SignupRequest request, String encryptedPassword){
 
-        return Member.builder()
-                .memberName(request.getMemberName())
-                .email(request.getEmail())
-                .address(request.getAddress())
-                .password(encryptedPassword)
-                .gender(request.getGender())
-                .age(request.getAge())
-                .specAddress(request.getSpecAddress())
-                .build();
-    }
+		return Member.builder()
+			.memberName(request.getMemberName())
+			.email(request.getEmail())
+			.address(request.getAddress())
+			.password(encryptedPassword)
+			.gender(request.getGender())
+			.age(request.getAge())
+			.specAddress(request.getSpecAddress())
+			.build();
+	}
 
-    // Test 용도
-    public static Member of(String email, String encryptedPassword, String memberName, Role role){
+	// Test 용도
+	public static Member of(String email, String encryptedPassword, String memberName, Role role){
 
-        return Member.builder()
-                .email(email)
-                .password(encryptedPassword)
-                .memberName(memberName)
-                .build();
-    }
+		return Member.builder()
+			.email(email)
+			.password(encryptedPassword)
+			.memberName(memberName)
+			.build();
+	}
 
 }
