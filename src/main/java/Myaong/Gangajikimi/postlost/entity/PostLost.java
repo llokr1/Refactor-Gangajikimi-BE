@@ -6,6 +6,7 @@ import Myaong.Gangajikimi.common.enums.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
@@ -58,4 +59,56 @@ public class PostLost extends BaseEntity {
 
     @ElementCollection
     private List<String> realImage; // 실제 사진 (URL 또는 파일 경로 리스트)
+
+    @Builder
+    private PostLost(List<String> realImage,
+                     Member member,
+                     String title,
+                     String dogName,
+                     DogType dogType,
+                     DogGender dogGender,
+                     String dogColor,
+                     String content,
+                     Point lostSpot,
+                     LocalDate lostDate,
+                     LocalDateTime lostTime){
+        this.realImage = realImage;
+        this.member = member;
+        this.title = title;
+        this.dogName = dogName;
+        this.dogType = dogType;
+        this.dogGender = dogGender;
+        this.dogColor = dogColor;
+        this.content = content;
+        this.lostSpot = lostSpot;
+        this.lostDate = lostDate;
+        this.lostTime = lostTime;
+    }
+
+    public static PostLost of(List<String> realImage,
+                              Member member,
+                              String title,
+                              String dogName,
+                              DogType dogType,
+                              DogGender dogGender,
+                              String dogColor,
+                              String content,
+                              Point lostSpot,
+                              LocalDate lostDate,
+                              LocalDateTime lostTime){
+        return PostLost.builder()
+                .realImage(realImage)
+                .member(member)
+                .title(title)
+                .dogName(dogName)
+                .dogType(dogType)
+                .dogColor(dogColor)
+                .dogGender(dogGender)
+                .content(content)
+                .lostSpot(lostSpot)
+                .lostDate(lostDate)
+                .lostTime(lostTime)
+                .build();
+    }
+
 }
