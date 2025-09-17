@@ -13,12 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
@@ -44,23 +42,18 @@ public class JwtTokenProvider {
     // 사용자 정보를 바탕으로 토큰 생성
     public String generateAccessToken(Authentication authentication){
         Object principal = authentication.getPrincipal();
-        Long memberId;
         String role;
+        Long memberId;
 
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
-            memberId = userDetails.getId();
-            role = userDetails.getAuthorities().iterator().next().getAuthority();
-        } else {
-            // fallback: principal이 String(email)일 때
-            String email = principal.toString();
-            Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
-            memberId = member.getId();
-            role = member.getRole().toString();
-        }
+		String email = principal.toString();
 
-        log.info("{} : 토큰 생성 완료", memberId);
+		Member member = memberRepository.findByEmail(email)
+			.orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+
+        memberId = member.getId();
+		role = member.getRole().toString();
+
+        log.info("{} : 토큰 생성 완료", member.getEmail());
 
         return Jwts.builder()
                 // 토큰 제목 설정
@@ -79,12 +72,11 @@ public class JwtTokenProvider {
 
     public String regenerateAccessToken(Member member){
 
-        String email = member.getEmail();
-
+        Long id = member.getId();
         String role = member.getRole().toString();
 
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(id.toString())
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -118,7 +110,7 @@ public class JwtTokenProvider {
 
         Claims claims = parseClaimsFromToken(token);
 
-        String id = claims.getSubject();      // memberId
+        String id = claims.getSubject();      // email
         Long memberId = Long.parseLong(id);
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 

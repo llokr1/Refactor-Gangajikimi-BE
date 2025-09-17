@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/api/auth/refresh",
                             "/ws-chat/**").permitAll() // 웹소켓 연동 허용
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/test-chat.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
