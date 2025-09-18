@@ -23,9 +23,11 @@ public enum ErrorCode {
 
     // MESSAGE
     MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MESSAGE400", "해당 메세지는 존재하지 않습니다."),
+    CANNOT_DELETE_MASSAGE(HttpStatus.UNAUTHORIZED,"MESSAGE401","본인의 메세지만 삭제할 수 있습니다."),
 
     //CHATROOM
-    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CHATROOM400", "해당 채팅방은 존재하지 않습니다.");
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CHATROOM400", "해당 채팅방은 존재하지 않습니다."),
+    NOT_SAME_PEOPLE(HttpStatus.BAD_REQUEST, "CHATROOM4001", "본인과의 채팅은 생성할 수 없습니다.");
 
 
 
