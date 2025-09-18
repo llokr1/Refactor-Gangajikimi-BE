@@ -1,11 +1,13 @@
 package Myaong.Gangajikimi.chatroom.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import Myaong.Gangajikimi.chatmessage.entity.ChatMessage;
 import Myaong.Gangajikimi.chatroom.entity.ChatRoom;
+import Myaong.Gangajikimi.chatroom.entity.QChatRoom;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomListResponse;
 import Myaong.Gangajikimi.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -59,4 +61,52 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 				.build();
 		}).toList();
 	}
+
+	@Override
+	public Optional<ChatRoom> findByMembers(Member member1, Member member2) {
+		QChatRoom chatRoom = QChatRoom.chatRoom;
+
+		ChatRoom result = queryFactory
+			.selectFrom(chatRoom)
+			.where(
+				(chatRoom.member1.eq(member1).and(chatRoom.member2.eq(member2)))
+					.or(chatRoom.member1.eq(member2).and(chatRoom.member2.eq(member1)))
+			)
+			.fetchOne();
+
+		return Optional.ofNullable(result);
+	}
+
+	// @Override
+	// public Optional<ChatRoom> findByIdAndParticipant(Long chatroomId, Long userId) {
+	// 	QChatRoom chatRoom = QChatRoom.chatRoom;
+	//
+	// 	ChatRoom result = queryFactory
+	// 		.selectFrom(chatRoom)
+	// 		.where(
+	// 			chatRoom.id.eq(chatroomId)
+	// 				.and(chatRoom.member1.id.eq(userId)
+	// 					.or(chatRoom.member2.id.eq(userId)))
+	// 		)
+	// 		.fetchOne();
+	//
+	// 	return Optional.ofNullable(result);
+	// }
+	//
+	// @Override
+	// public List<ChatRoom> findAllActiveByUser(Long userId) {
+	// 	QChatRoom chatRoom = QChatRoom.chatRoom;
+	//
+	// 	return queryFactory
+	// 		.selectFrom(chatRoom)
+	// 		.where(
+	// 			chatRoom.member1.id.eq(userId)
+	// 				.and(chatRoom.deletedByUser1.isFalse())
+	// 				.or(
+	// 					chatRoom.member2.id.eq(userId)
+	// 						.and(chatRoom.deletedByUser2.isFalse())
+	// 				)
+	// 		)
+	// 		.fetch();
+	// }
 }
