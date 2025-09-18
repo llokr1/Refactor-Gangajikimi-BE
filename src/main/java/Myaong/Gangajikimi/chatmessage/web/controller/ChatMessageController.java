@@ -3,12 +3,15 @@ package Myaong.Gangajikimi.chatmessage.web.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
 import Myaong.Gangajikimi.chatmessage.service.ChatMessageService;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
@@ -41,5 +44,29 @@ public class ChatMessageController {
 		messageService.markAsRead(messageId);
 		return GlobalResponse.onSuccess(SuccessCode.OK);
 	}
+
+	@Operation(summary = "특정 메시지 삭제 API", description = "특정 메시지를 삭제합니다.")
+	@ApiResponse(responseCode = "200", description = "메세지 삭제 성공")
+	@DeleteMapping("/{messageId}")
+	public ResponseEntity<GlobalResponse> deleteMessage(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@PathVariable Long messageId) {
+		Long memberId = userDetails.getId();
+		messageService.deleteMessage(messageId,memberId);
+		return GlobalResponse.onSuccess(SuccessCode.OK);
+	}
+
+	// @Operation(summary = "메시지 검색 API", description = "메세지를 검색합니다.")
+	// @ApiResponse(responseCode = "200", description = "메세지 검색 성공")
+	// @GetMapping("/{messageId}")
+	// public ResponseEntity<GlobalResponse> searchMessages(
+	// 	@RequestParam Long chatroomId,
+	// 	@RequestParam String keyword) {
+	//
+	// 	List<ChatSearchResponse> response = messageService.searchMessage(chatroomId, keyword);
+	//
+	// 	return GlobalResponse.onSuccess(SuccessCode.OK, response);
+	// }
+
 }
 
