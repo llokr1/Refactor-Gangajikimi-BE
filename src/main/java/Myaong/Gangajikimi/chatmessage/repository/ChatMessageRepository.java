@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import Myaong.Gangajikimi.chatmessage.entity.ChatMessage;
 
 @Repository
-public interface MessageRepository extends JpaRepository<ChatMessage, Long> {
+public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 	List<ChatMessage> findByChatRoomIdOrderByCreatedAtAsc(Long chatroomId);
+	List<ChatMessage> findByChatRoomIdAndContentContaining(Long chatroomId, String keyword);
+	void deleteByChatRoomId(Long chatroomId);
 }

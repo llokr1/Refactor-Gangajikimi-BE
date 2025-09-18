@@ -20,18 +20,7 @@ public class SignupRequest {
     public String email;
 
     @NotNull
-    public String gender;
-
-    @NotNull
     public String password;
 
-    @NotNull
-    public Integer age;
-
-    @NotNull
-    public String address;
-
-    @NotNull
-    public String specAddress;
 
 }

@@ -13,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatSendRequest {
-	private Long chatroomId;
-	private Long senderId;
-	private String content;
+	private String type;        // "AUTH" | "MESSAGE"
+	private Long chatroomId;    // MESSAGE일 때만 사용
+	private String token;       // AUTH일 때 사용
+	private String content;     // MESSAGE일 때 사용
 }
-

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import Myaong.Gangajikimi.chatroom.entity.ChatRoom;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomResponse;
+import Myaong.Gangajikimi.chatroom.web.dto.delete.ChatRoomDeleteResponse;
 
 @Component
 public class ChatRoomConverter {
@@ -16,5 +17,6 @@ public class ChatRoomConverter {
 			.createdAt(room.getCreatedAt())
 			.build();
 	}
+
 }
 

@@ -10,6 +10,5 @@ import Myaong.Gangajikimi.member.entity.Member;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatRoomRepositoryCustom {
-	Optional<ChatRoom> findByMember1AndMember2(Member member1, Member member2);
 
 }
