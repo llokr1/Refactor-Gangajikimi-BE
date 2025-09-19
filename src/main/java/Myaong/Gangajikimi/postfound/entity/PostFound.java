@@ -4,10 +4,12 @@ import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
 import Myaong.Gangajikimi.common.enums.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
+import Myaong.Gangajikimi.postlost.entity.PostLost;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
@@ -57,4 +59,52 @@ public class PostFound extends BaseEntity {
 
     @ElementCollection
     private List<String> realImage;
+
+    @Builder
+    private PostFound(List<String> realImage,
+                     Member member,
+                     String title,
+                     DogType dogType,
+                     String dogColor,
+                     String content,
+                     DogGender dogGender,
+                     Point foundSpot,
+                     LocalDate foundDate,
+                     LocalDateTime foundTime){
+        this.realImage = realImage;
+        this.member = member;
+        this.title = title;
+        this.dogType = dogType;
+        this.dogGender = dogGender;
+        this.dogColor = dogColor;
+        this.content = content;
+        this.foundSpot = foundSpot;
+        this.foundDate = foundDate;
+        this.foundTime = foundTime;
+    }
+
+    public static PostFound of(List<String> realImage,
+                              Member member,
+                              String title,
+                              DogType dogType,
+                              DogGender dogGender,
+                              String dogColor,
+                              String content,
+                              Point foundSpot,
+                              LocalDate foundDate,
+                              LocalDateTime foundTime){
+        return PostFound.builder()
+                .realImage(realImage)
+                .member(member)
+                .title(title)
+                .dogType(dogType)
+                .dogColor(dogColor)
+                .dogGender(dogGender)
+                .content(content)
+                .foundSpot(foundSpot)
+                .foundDate(foundDate)
+                .foundTime(foundTime)
+                .build();
+    }
+
 }
