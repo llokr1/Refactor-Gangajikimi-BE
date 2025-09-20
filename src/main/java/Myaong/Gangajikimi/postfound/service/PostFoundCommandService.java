@@ -1,4 +1,4 @@
-package Myaong.Gangajikimi.postlost.service;
+package Myaong.Gangajikimi.postfound.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
 import Myaong.Gangajikimi.common.enums.DogType;
@@ -6,9 +6,9 @@ import Myaong.Gangajikimi.common.enums.Role;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.member.entity.Member;
-import Myaong.Gangajikimi.postlost.entity.PostLost;
-import Myaong.Gangajikimi.postlost.repository.PostLostRepository;
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import Myaong.Gangajikimi.postfound.entity.PostFound;
+import Myaong.Gangajikimi.postfound.repository.PostFoundRepository;
+import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -18,51 +18,50 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostLostCommandService {
+public class PostFoundCommandService {
 
-    private final PostLostRepository postLostRepository;
+    private final PostFoundRepository postFoundRepository;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-    public PostLost postPostLost(PostLostRequest request, Member member){
+    public PostFound postPostFound(PostFoundRequest request, Member member){
 
         DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        Point newPoint = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
+        Point newPoint = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
 
-        PostLost newPostLost = PostLost.of(request.getDogImages(),
+        PostFound newPostFound = PostFound.of(request.getDogImages(),
                 member,
                 request.getTitle(),
-                request.getDogName(),
                 dogType,
                 dogGender,
                 request.getDogColor(),
                 request.getFeatures(),
                 newPoint,
-                request.getLostDate(),
-                request.getLostTime());
+                request.getFoundDate(),
+                request.getFoundTime());
 
 
-        return postLostRepository.save(newPostLost);
+        return postFoundRepository.save(newPostFound);
     }
 
-    public PostLost updatePostLost(PostLostRequest request, Member member, PostLost postLost){
+    public PostFound updatePostFound(PostFoundRequest request, Member member, PostFound postFound){
 
         // 권환 확인
-        if(!member.equals(postLost.getMember())){
+        if(!member.equals(postFound.getMember())){
             throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
         }
 
-        Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
+        Point point = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
 
-        postLost.update(request, point);
+        postFound.update(request, point);
 
-        return postLost;
+        return postFound;
     }
 
-    public void deletePostLost(PostLost postLost, Member member){
+    public void deletePostFound(PostFound postFound, Member member){
 
-        boolean isOwner = member.equals(postLost.getMember());
+        boolean isOwner = member.equals(postFound.getMember());
 
         boolean isAdmin = member.getRole() == Role.ADMIN;
 
@@ -70,12 +69,10 @@ public class PostLostCommandService {
             throw new GeneralException(ErrorCode.UNAUTHORIZED_DELETING);
         }
 
-        if(!postLostRepository.existsById(postLost.getId())){
+        if(!postFoundRepository.existsById(postFound.getId())){
             throw new GeneralException(ErrorCode.POST_NOT_FOUND);
         }
-
-        postLostRepository.delete(postLost);
+        postFoundRepository.delete(postFound);
     }
-
 
 }

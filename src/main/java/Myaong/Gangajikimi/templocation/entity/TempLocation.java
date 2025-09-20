@@ -4,6 +4,7 @@ import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -19,4 +20,20 @@ public class TempLocation extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point spot;
+
+    @Builder
+    private TempLocation(PostFound postFound, Point spot) {
+
+        this.postFound = postFound;
+        this.spot = spot;
+    }
+
+    public static TempLocation of(PostFound postFound, Point spot) {
+
+        return TempLocation.builder().postFound(postFound).spot(spot).build();
+    }
+
+    public void updateSpot(Point spot){
+        this.spot = spot;
+    }
 }

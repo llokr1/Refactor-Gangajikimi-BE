@@ -4,6 +4,7 @@ import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
 import Myaong.Gangajikimi.common.enums.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
+import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -109,6 +110,23 @@ public class PostLost extends BaseEntity {
                 .lostDate(lostDate)
                 .lostTime(lostTime)
                 .build();
+    }
+
+    public void update(PostLostRequest request, Point lostSpot) {
+
+        DogType dogType = DogType.valueOf(request.getDogType());
+        DogGender dogGender = DogGender.valueOf(request.getDogGender());
+
+        this.realImage = request.getDogImages(); // 이미지 업데이트 로직은 실제 정책에 맞게 수정 필요
+        this.title = request.getTitle();
+        this.dogName = request.getDogName();
+        this.dogType = dogType;
+        this.dogColor = request.getDogColor();
+        this.dogGender = dogGender;
+        this.content = request.getFeatures();
+        this.lostDate = request.getLostDate();
+        this.lostTime = request.getLostTime();
+        this.lostSpot = lostSpot;
     }
 
 }

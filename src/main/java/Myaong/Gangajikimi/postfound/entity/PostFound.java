@@ -1,20 +1,21 @@
 package Myaong.Gangajikimi.postfound.entity;
-
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
 import Myaong.Gangajikimi.common.enums.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
+import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
+import Myaong.Gangajikimi.templocation.entity.TempLocation;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,4 +58,70 @@ public class PostFound extends BaseEntity {
 
     @ElementCollection
     private List<String> realImage;
+
+    @OneToMany(mappedBy = "postFound", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TempLocation> tempLocations = new ArrayList<>();
+
+    @Builder
+    private PostFound(List<String> realImage,
+                      Member member,
+                      String title,
+                      DogType dogType,
+                      String dogColor,
+                      String content,
+                      DogGender dogGender,
+                      Point foundSpot,
+                      LocalDate foundDate,
+                      LocalDateTime foundTime){
+        this.realImage = realImage;
+        this.member = member;
+        this.title = title;
+        this.dogType = dogType;
+        this.dogGender = dogGender;
+        this.dogColor = dogColor;
+        this.content = content;
+        this.foundSpot = foundSpot;
+        this.foundDate = foundDate;
+        this.foundTime = foundTime;
+    }
+
+    public static PostFound of(List<String> realImage,
+                               Member member,
+                               String title,
+                               DogType dogType,
+                               DogGender dogGender,
+                               String dogColor,
+                               String content,
+                               Point foundSpot,
+                               LocalDate foundDate,
+                               LocalDateTime foundTime){
+        return PostFound.builder()
+                .realImage(realImage)
+                .member(member)
+                .title(title)
+                .dogType(dogType)
+                .dogColor(dogColor)
+                .dogGender(dogGender)
+                .content(content)
+                .foundSpot(foundSpot)
+                .foundDate(foundDate)
+                .foundTime(foundTime)
+                .build();
+    }
+
+    public void update(PostFoundRequest request, Point foundSpot) {
+
+        DogType dogType = DogType.valueOf(request.getDogType());
+        DogGender dogGender = DogGender.valueOf(request.getDogGender());
+
+        this.realImage = request.getDogImages();
+        this.title = request.getTitle();
+        this.dogType = dogType;
+        this.dogColor = request.getDogColor();
+        this.dogGender = dogGender;
+        this.content = request.getFeatures();
+        this.foundDate = request.getFoundDate();
+        this.foundTime = request.getFoundTime();
+        this.foundSpot = foundSpot;
+    }
 }
