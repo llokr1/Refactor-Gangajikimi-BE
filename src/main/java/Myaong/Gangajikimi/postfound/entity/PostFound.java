@@ -5,8 +5,8 @@ import Myaong.Gangajikimi.common.enums.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.templocation.entity.TempLocation;
-import jakarta.persistence.Entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -73,6 +73,7 @@ public class PostFound extends BaseEntity {
                       Point foundSpot,
                       LocalDate foundDate,
                       LocalDateTime foundTime){
+
         this.realImage = realImage;
         this.member = member;
         this.title = title;
@@ -95,6 +96,7 @@ public class PostFound extends BaseEntity {
                                Point foundSpot,
                                LocalDate foundDate,
                                LocalDateTime foundTime){
+
         return PostFound.builder()
                 .realImage(realImage)
                 .member(member)
@@ -125,3 +127,4 @@ public class PostFound extends BaseEntity {
         this.foundSpot = foundSpot;
     }
 }
+

@@ -11,3 +11,4 @@ public interface TempLocationRepository extends JpaRepository<TempLocation, Long
     Optional<TempLocation> findTempLocationByPostFound(PostFound postFound);
 
 }
+

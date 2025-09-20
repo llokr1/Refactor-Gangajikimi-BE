@@ -5,6 +5,7 @@ import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
+
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class PostFoundController {
 
     @PostMapping
     public ResponseEntity<GlobalResponse> postFound(@RequestBody PostFoundRequest request,
+
                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();
@@ -48,3 +50,4 @@ public class PostFoundController {
         return GlobalResponse.onSuccess(SuccessCode.OK);
     }
 }
+

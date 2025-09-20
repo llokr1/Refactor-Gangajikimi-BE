@@ -10,3 +10,4 @@ public interface PostFoundRepository extends JpaRepository<PostFound, Long> {
     Optional<PostFound> findPostFoundById(Long id);
 
 }
+
