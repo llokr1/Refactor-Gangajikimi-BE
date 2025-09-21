@@ -32,4 +32,8 @@ public class TempLocation extends BaseEntity {
 
         return TempLocation.builder().postFound(postFound).spot(spot).build();
     }
+
+    public void updateSpot(Point spot){
+        this.spot = spot;
+    }
 }

@@ -2,6 +2,9 @@ package Myaong.Gangajikimi.postlost.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
 import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.Role;
+import Myaong.Gangajikimi.common.exception.GeneralException;
+import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
 import Myaong.Gangajikimi.postlost.repository.PostLostRepository;
@@ -41,6 +44,37 @@ public class PostLostCommandService {
 
 
         return postLostRepository.save(newPostLost);
+    }
+
+    public PostLost updatePostLost(PostLostRequest request, Member member, PostLost postLost){
+
+        // 권환 확인
+        if(!member.equals(postLost.getMember())){
+            throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
+        }
+
+        Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
+
+        postLost.update(request, point);
+
+        return postLost;
+    }
+
+    public void deletePostLost(PostLost postLost, Member member){
+
+        boolean isOwner = member.equals(postLost.getMember());
+
+        boolean isAdmin = member.getRole() == Role.ADMIN;
+
+        if (!isOwner && !isAdmin) {
+            throw new GeneralException(ErrorCode.UNAUTHORIZED_DELETING);
+        }
+
+        if(!postLostRepository.existsById(postLost.getId())){
+            throw new GeneralException(ErrorCode.POST_NOT_FOUND);
+        }
+
+        postLostRepository.delete(postLost);
     }
 
 
