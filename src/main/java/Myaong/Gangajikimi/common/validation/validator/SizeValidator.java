@@ -1,0 +1,13 @@
+package Myaong.Gangajikimi.common.validation.validator;
+
+import Myaong.Gangajikimi.common.validation.annotation.ValidSize;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+public class SizeValidator implements ConstraintValidator<ValidSize, Integer> {
+
+	@Override
+	public boolean isValid(Integer value, ConstraintValidatorContext context) {
+		return value != null && value >= 1;
+	}
+}
