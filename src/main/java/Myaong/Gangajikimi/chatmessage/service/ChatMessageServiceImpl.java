@@ -4,6 +4,9 @@ import static Myaong.Gangajikimi.common.response.ErrorCode.*;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,8 @@ import Myaong.Gangajikimi.chatmessage.converter.MessageConverter;
 import Myaong.Gangajikimi.chatmessage.entity.ChatMessage;
 import Myaong.Gangajikimi.chatmessage.repository.ChatMessageRepository;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatEventResponse;
+import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessageFinalResponse;
+import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessagePagingRequest;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatSendRequest;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessageResponse;
 import Myaong.Gangajikimi.chatroom.entity.ChatRoom;
@@ -72,9 +77,19 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
 	// 메세지 조회
 	@Transactional(readOnly = true)
-	public List<ChatMessageResponse> getMessages(Long chatroomId) {
-		return messageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatroomId)
-			.stream().map(converter::toResponse).toList();
+	public ChatMessageFinalResponse getMessages(Long chatroomId, ChatMessagePagingRequest request) {
+		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize(),
+			Sort.by(Sort.Direction.DESC, "createdAt")); // 최신 메시지부터 조회
+
+		Page<ChatMessage> chats =
+			messageRepository.findByChatRoomId(chatroomId, pageable);
+
+		List<ChatMessageResponse> content = chats.getContent()
+			.stream()
+			.map(converter::toResponse)
+			.toList();
+
+		return new ChatMessageFinalResponse(content, chats.hasNext());
 	}
 
 	// 읽음 처리 표시
