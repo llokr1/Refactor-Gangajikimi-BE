@@ -1,0 +1,42 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://gangajikimi-db.cjsgei08gb4x.ap-northeast-2.rds.amazonaws.com:5432/dogsecuritydb
+    username: postgres
+    password: gangajikimi1234
+    driver-class-name: org.postgresql.Driver
+    sql:
+      init:
+        mode: never
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: redis
+      port: 6379
+  cache:
+    type: redis
+jwt:
+  access:
+    secretKey: gangajikimibimilkeyjironggaebalgeumanhagosibda
+    expiration: 600000 # 10분
+  refresh:
+    expiration: 1209600000 # 14주
+
+logging:
+  level:
+    org.hibernate.type: trace
+    org.springframework.security: debug
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
