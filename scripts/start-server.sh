@@ -30,7 +30,7 @@ docker run -d --name gangajikimi-server -p 8080:8080 \
   -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
   -e SPRING_JPA_SHOW_SQL=true \
   -e SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect \
-  -e SPRING_DATA_REDIS_HOST=redis \
+  -e SPRING_DATA_REDIS_HOST=localhost \
   -e SPRING_DATA_REDIS_PORT=6379 \
   -e SPRING_CACHE_TYPE=redis \
   -e JWT_ACCESS_SECRETKEY=gangajikimibimilkeyjironggaebalgeumanhagosibda \
