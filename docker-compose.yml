@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  app:
+    image: dldnjsgml3054/gangajikimi-server:latest
+    container_name: gangajikimi-server
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://gangajikimi-db.cjsgei08gb4x.ap-northeast-2.rds.amazonaws.com:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: gangajikimi1234
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+      SPRING_SQL_INIT_MODE: never
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_DATA_REDIS_HOST: redis   # localhost 대신 redis 컨테이너 이름
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_CACHE_TYPE: redis
+      JWT_ACCESS_SECRETKEY: gangajikimibimilkeyjironggaebalgeumanhagosibda
+      JWT_ACCESS_EXPIRATION: 600000
+      JWT_REFRESH_EXPIRATION: 1209600000
+      LOGGING_LEVEL_ORG_HIBERNATE_TYPE: trace
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: debug
+      SERVER_SERVLET_ENCODING_CHARSET: UTF-8
+      SERVER_SERVLET_ENCODING_FORCE: "true"
+      SERVER_SERVLET_ENCODING_ENABLED: "true"
