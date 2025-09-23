@@ -40,6 +40,7 @@ jobs:
       - name: Docker 이미지 생성
         run: docker build -t gangajikimi-server .
 
+
       # Docker Hub용 태그 붙이기 (원희 계정 기준)
       - name: Docker 이미지에 Tag 붙이기
         run: docker tag gangajikimi-server ${{ secrets.DOCKERHUB_USERNAME }}/gangajikimi-server:latest
