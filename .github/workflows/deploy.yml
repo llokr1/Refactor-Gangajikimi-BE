@@ -33,20 +33,19 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: ECR에 로그인하기
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      # Docker Hub 로그인 (Secrets에 아이디/비번 저장해둬야 함)
+      - name: Docker Hub 로그인
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Docker 이미지 생성
         run: docker build -t gangajikimi-server .
 
-
-      ## steps.login-ecr.outputs.registry -> ECR 레포지토리의 URL 값.
+      # Docker Hub용 태그 붙이기 (원희 계정 기준)
       - name: Docker 이미지에 Tag 붙이기
-        run: docker tag gangajikimi-server ${{ steps.login-ecr.outputs.registry }}/gangajikimi-server:latest
+        run: docker tag gangajikimi-server ${{ secrets.DOCKERHUB_USERNAME }}/gangajikimi-server:latest
 
-      - name: ECR에 Docker 이미지 Push
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/gangajikimi-server:latest
+      - name: Docker Hub에 Push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/gangajikimi-server:latest
 
       - name: 압축하기
         run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts
