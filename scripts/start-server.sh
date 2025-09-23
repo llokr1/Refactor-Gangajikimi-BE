@@ -28,12 +28,12 @@ docker run -d --name gangajikimi-server --network gangajikimi-net -p 8080:8080 \
   -e SPRING_DATASOURCE_URL=jdbc:postgresql://gangajikimi-db.cjsgei08gb4x.ap-northeast-2.rds.amazonaws.com:5432/postgres \
   -e SPRING_DATASOURCE_USERNAME=postgres \
   -e SPRING_DATASOURCE_PASSWORD=gangajikimi1234 \
-  -e SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver \
+  -e SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver \
   -e SPRING_SQL_INIT_MODE=never \
   -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
   -e SPRING_JPA_SHOW_SQL=true \
   -e SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect \
-  -e SPRING_DATA_REDIS_HOST=redis \        # localhost -> redis 컨테이너 이름
+  -e SPRING_DATA_REDIS_HOST=redis \
   -e SPRING_DATA_REDIS_PORT=6379 \
   -e SPRING_CACHE_TYPE=redis \
   -e JWT_ACCESS_SECRETKEY=gangajikimibimilkeyjironggaebalgeumanhagosibda \
