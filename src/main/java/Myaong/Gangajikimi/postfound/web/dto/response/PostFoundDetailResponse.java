@@ -86,7 +86,6 @@ public class PostFoundDetailResponse {
         return PostFoundDetailResponse.builder()
                 .postId(postId)
                 .title(title)
-                .dogName(dogName)
                 .dogType(dogType)
                 .dogColor(dogColor)
                 .dogGender(dogGender)
