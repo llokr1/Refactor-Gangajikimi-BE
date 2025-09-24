@@ -4,9 +4,11 @@ import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
+import Myaong.Gangajikimi.postfoundreport.service.PostFoundReportService;
+import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
+import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
 
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostFoundController {
 
     private final PostFoundFacade postFoundFacade;
+    private final PostFoundReportService postFoundReportService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse> postFound(@RequestBody PostFoundRequest request,
@@ -48,6 +51,23 @@ public class PostFoundController {
         postFoundFacade.deletePostFound(memberId, postFoundId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK);
+    }
+
+    @GetMapping("/{postFoundId}")
+    public ResponseEntity<GlobalResponse> getPostFoundDetail(@PathVariable Long postFoundId) {
+        PostFoundDetailResponse response = postFoundFacade.getPostFoundDetail(postFoundId);
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @PostMapping("/{postFoundId}/reports")
+    public ResponseEntity<GlobalResponse> reportPostFound(@PathVariable Long postFoundId,
+                                                          @RequestBody PostFoundReportRequest request,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        Long memberId = userDetails.getId();
+        var response = postFoundReportService.reportPostFound(postFoundId, request, memberId);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 }
 
