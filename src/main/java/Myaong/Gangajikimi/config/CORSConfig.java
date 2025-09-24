@@ -1,24 +1,24 @@
 package Myaong.Gangajikimi.config;
 
-import java.util.List;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+@Configuration
+public class CORSConfig implements WebMvcConfigurer {
 
-public class CORSConfig {
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5000",
-			"http://54.180.54.51:8080"));
-		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
-		config.setAllowCredentials(true);
-		config.setExposedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", config);
-		return source;
-	}
+    private final long MAX_AGE_SECS = 3600;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 모든 경로에 대하여
+        registry.addMapping("/**")
+                // Origin이 http:localhost:3000에 대해.
+                .allowedOrigins("http://localhost:3000", "http://localhost:5173")
+                // GET, POST, PUT, PATCH, DELETE, OPTIONS 메서드를 허용한다.
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(MAX_AGE_SECS);
+    }
 }
