@@ -68,6 +68,7 @@ public class PostFoundFacade {
     }
 
     public PostFoundDetailResponse getPostFoundDetail(Long postFoundId) {
+
         return postFoundQueryService.getPostFoundDetail(postFoundId);
     }
 

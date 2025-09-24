@@ -44,6 +44,7 @@ public class PostFoundQueryService {
                 // TODO: Cloud 스토리지 연동 후 활성화
                 // postFound.getAiImage(),
                 // postFound.getRealImage(),
+                postFound.getMember().getId(), // authorId
                 postFound.getMember().getMemberName(),
                 postFound.getCreatedAt(),
                 TimeUtil.getTimeAgo(postFound.getCreatedAt())

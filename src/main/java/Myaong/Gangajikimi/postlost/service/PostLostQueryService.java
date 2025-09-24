@@ -45,6 +45,7 @@ public class PostLostQueryService {
                 // TODO: Cloud 스토리지 연동 후 활성화
                 // postLost.getAiImage(),
                 // postLost.getRealImage(),
+                postLost.getMember().getId(), // authorId
                 postLost.getMember().getMemberName(),
                 postLost.getCreatedAt(),
                 TimeUtil.getTimeAgo(postLost.getCreatedAt())

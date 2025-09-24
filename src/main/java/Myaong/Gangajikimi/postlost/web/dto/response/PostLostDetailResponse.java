@@ -27,6 +27,7 @@ public class PostLostDetailResponse {
     // TODO: Cloud 스토리지 연동 후 활성화
     // private String aiImage;
     // private List<String> realImages;
+    private Long authorId;
     private String authorName;
     private LocalDateTime createdAt;
     private String timeAgo;
@@ -39,7 +40,7 @@ public class PostLostDetailResponse {
                                   // String address,
                                   // TODO: Cloud 스토리지 연동 후 활성화
                                   // String aiImage, List<String> realImages, 
-                                  String authorName,
+                                  Long authorId, String authorName,
                                   LocalDateTime createdAt, String timeAgo) {
         this.postId = postId;
         this.title = title;
@@ -57,6 +58,7 @@ public class PostLostDetailResponse {
         // TODO: Cloud 스토리지 연동 후 활성화
         // this.aiImage = aiImage;
         // this.realImages = realImages;
+        this.authorId = authorId;
         this.authorName = authorName;
         this.createdAt = createdAt;
         this.timeAgo = timeAgo;
@@ -69,7 +71,7 @@ public class PostLostDetailResponse {
                                           // String address,
                                           // TODO: Cloud 스토리지 연동 후 활성화
                                           // String aiImage, List<String> realImages, 
-                                          String authorName,
+                                          Long authorId, String authorName,
                                           LocalDateTime createdAt, String timeAgo) {
         return PostLostDetailResponse.builder()
                 .postId(postId)
@@ -88,6 +90,7 @@ public class PostLostDetailResponse {
                 // TODO: Cloud 스토리지 연동 후 활성화
                 // .aiImage(aiImage)
                 // .realImages(realImages)
+                .authorId(authorId)
                 .authorName(authorName)
                 .createdAt(createdAt)
                 .timeAgo(timeAgo)
