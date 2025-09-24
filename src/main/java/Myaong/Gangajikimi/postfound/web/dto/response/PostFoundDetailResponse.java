@@ -7,54 +7,81 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class PostFoundDetailResponse {
 
     private Long postId;
     private String title;
-    private String dogName;
     private DogType dogType;
     private String dogColor;
     private DogGender dogGender;
     private String content;
     private LocalDate foundDate;
     private LocalDateTime foundTime;
-    private String foundLocation;
-    private String aiImage;
-    private List<String> realImages;
+    private Double longitude;
+    private Double latitude;
+    // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+    // private String address;
+    // TODO: Cloud 스토리지 연동 후 활성화
+    // private String aiImage;
+    // private List<String> realImages;
     private String authorName;
     private LocalDateTime createdAt;
     private String timeAgo;
 
     @Builder
-    private PostFoundDetailResponse(Long postId, String title, String dogName, DogType dogType, 
-                                   String dogColor, DogGender dogGender, String content,
-                                   LocalDate foundDate, LocalDateTime foundTime, String foundLocation,
-                                   String aiImage, List<String> realImages, String authorName,
+    private PostFoundDetailResponse(Long postId, 
+                                    String title, 
+                                    DogType dogType, 
+                                    String dogColor, 
+                                    DogGender dogGender, 
+                                    String content,
+                                   LocalDate foundDate, 
+                                   LocalDateTime foundTime, 
+                                   Double longitude, 
+                                   Double latitude,
+                                   // TODO: 주소 변환 API 연동 후 활성화
+                                   // String address,
+                                   // TODO: Cloud 스토리지 연동 후 활성화
+                                   // String aiImage, List<String> realImages, 
+                                   String authorName,
                                    LocalDateTime createdAt, String timeAgo) {
         this.postId = postId;
         this.title = title;
-        this.dogName = dogName;
         this.dogType = dogType;
         this.dogColor = dogColor;
         this.dogGender = dogGender;
         this.content = content;
         this.foundDate = foundDate;
         this.foundTime = foundTime;
-        this.foundLocation = foundLocation;
-        this.aiImage = aiImage;
-        this.realImages = realImages;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        // TODO: 주소 변환 API 연동 후 활성화
+        // this.address = address;
+        // TODO: Cloud 스토리지 연동 후 활성화
+        // this.aiImage = aiImage;
+        // this.realImages = realImages;
         this.authorName = authorName;
         this.createdAt = createdAt;
         this.timeAgo = timeAgo;
     }
 
-    public static PostFoundDetailResponse of(Long postId, String title, String dogName, DogType dogType,
-                                           String dogColor, DogGender dogGender, String content,
-                                           LocalDate foundDate, LocalDateTime foundTime, String foundLocation,
-                                           String aiImage, List<String> realImages, String authorName,
+    public static PostFoundDetailResponse of(Long postId, 
+                                            String title, 
+                                            DogType dogType,
+                                            String dogColor, 
+                                            DogGender dogGender, 
+                                            String content,
+                                            LocalDate foundDate, 
+                                            LocalDateTime foundTime, 
+                                            Double longitude, 
+                                            Double latitude,
+                                            // TODO: 주소 변환 API 연동 후 활성화
+                                            // String address,
+                                            // TODO: Cloud 스토리지 연동 후 활성화
+                                            // String aiImage, List<String> realImages, 
+                                            String authorName,
                                            LocalDateTime createdAt, String timeAgo) {
         return PostFoundDetailResponse.builder()
                 .postId(postId)
@@ -66,9 +93,13 @@ public class PostFoundDetailResponse {
                 .content(content)
                 .foundDate(foundDate)
                 .foundTime(foundTime)
-                .foundLocation(foundLocation)
-                .aiImage(aiImage)
-                .realImages(realImages)
+                .longitude(longitude)
+                .latitude(latitude)
+                // TODO: 주소 변환 API 연동 후 활성화
+                // .address(address)
+                // TODO: Cloud 스토리지 연동 후 활성화
+                // .aiImage(aiImage)
+                // .realImages(realImages)
                 .authorName(authorName)
                 .createdAt(createdAt)
                 .timeAgo(timeAgo)

@@ -7,7 +7,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class PostLostDetailResponse {
@@ -21,9 +20,13 @@ public class PostLostDetailResponse {
     private String content;
     private LocalDate lostDate;
     private LocalDateTime lostTime;
-    private String lostLocation;
-    private String aiImage;
-    private List<String> realImages;
+    private Double longitude;
+    private Double latitude;
+    // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+    // private String address;
+    // TODO: Cloud 스토리지 연동 후 활성화
+    // private String aiImage;
+    // private List<String> realImages;
     private String authorName;
     private LocalDateTime createdAt;
     private String timeAgo;
@@ -31,8 +34,12 @@ public class PostLostDetailResponse {
     @Builder
     private PostLostDetailResponse(Long postId, String title, String dogName, DogType dogType,
                                   String dogColor, DogGender dogGender, String content,
-                                  LocalDate lostDate, LocalDateTime lostTime, String lostLocation,
-                                  String aiImage, List<String> realImages, String authorName,
+                                  LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
+                                  // TODO: 주소 변환 API 연동 후 활성화
+                                  // String address,
+                                  // TODO: Cloud 스토리지 연동 후 활성화
+                                  // String aiImage, List<String> realImages, 
+                                  String authorName,
                                   LocalDateTime createdAt, String timeAgo) {
         this.postId = postId;
         this.title = title;
@@ -43,9 +50,13 @@ public class PostLostDetailResponse {
         this.content = content;
         this.lostDate = lostDate;
         this.lostTime = lostTime;
-        this.lostLocation = lostLocation;
-        this.aiImage = aiImage;
-        this.realImages = realImages;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        // TODO: 주소 변환 API 연동 후 활성화
+        // this.address = address;
+        // TODO: Cloud 스토리지 연동 후 활성화
+        // this.aiImage = aiImage;
+        // this.realImages = realImages;
         this.authorName = authorName;
         this.createdAt = createdAt;
         this.timeAgo = timeAgo;
@@ -53,8 +64,12 @@ public class PostLostDetailResponse {
 
     public static PostLostDetailResponse of(Long postId, String title, String dogName, DogType dogType,
                                           String dogColor, DogGender dogGender, String content,
-                                          LocalDate lostDate, LocalDateTime lostTime, String lostLocation,
-                                          String aiImage, List<String> realImages, String authorName,
+                                          LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
+                                          // TODO: 주소 변환 API 연동 후 활성화
+                                          // String address,
+                                          // TODO: Cloud 스토리지 연동 후 활성화
+                                          // String aiImage, List<String> realImages, 
+                                          String authorName,
                                           LocalDateTime createdAt, String timeAgo) {
         return PostLostDetailResponse.builder()
                 .postId(postId)
@@ -66,9 +81,13 @@ public class PostLostDetailResponse {
                 .content(content)
                 .lostDate(lostDate)
                 .lostTime(lostTime)
-                .lostLocation(lostLocation)
-                .aiImage(aiImage)
-                .realImages(realImages)
+                .longitude(longitude)
+                .latitude(latitude)
+                // TODO: 주소 변환 API 연동 후 활성화
+                // .address(address)
+                // TODO: Cloud 스토리지 연동 후 활성화
+                // .aiImage(aiImage)
+                // .realImages(realImages)
                 .authorName(authorName)
                 .createdAt(createdAt)
                 .timeAgo(timeAgo)

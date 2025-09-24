@@ -28,23 +28,22 @@ public class PostFoundQueryService {
         PostFound postFound = postFoundRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.POST_NOT_FOUND));
 
-        // TODO: 실제 주소 변환 로직 구현 (현재는 좌표만 반환)
-        String foundLocation = String.format("위도: %f, 경도: %f", 
-                postFound.getFoundSpot().getY(), postFound.getFoundSpot().getX());
-
         return PostFoundDetailResponse.of(
                 postFound.getId(),
                 postFound.getTitle(),
-                null, // PostFound에는 dogName이 없음
                 postFound.getDogType(),
                 postFound.getDogColor(),
                 postFound.getDogGender(),
                 postFound.getContent(),
                 postFound.getFoundDate(),
                 postFound.getFoundTime(),
-                foundLocation,
-                postFound.getAiImage(),
-                postFound.getRealImage(),
+                postFound.getFoundSpot().getX(), // longitude
+                postFound.getFoundSpot().getY(), // latitude
+                // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+                // getAddressFromCoordinates(postFound.getFoundSpot().getX(), postFound.getFoundSpot().getY()),
+                // TODO: Cloud 스토리지 연동 후 활성화
+                // postFound.getAiImage(),
+                // postFound.getRealImage(),
                 postFound.getMember().getMemberName(),
                 postFound.getCreatedAt(),
                 TimeUtil.getTimeAgo(postFound.getCreatedAt())

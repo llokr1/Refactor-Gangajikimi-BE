@@ -6,6 +6,7 @@ import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
 import Myaong.Gangajikimi.postfoundreport.service.PostFoundReportService;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
+import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
 
@@ -32,40 +33,42 @@ public class PostFoundController {
         return GlobalResponse.onSuccess(SuccessCode.OK, postFoundFacade.postPostFound(request, memberId));
     }
 
-    @PatchMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> updateFound(@RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
+    @PatchMapping("/{postId}")
+    public ResponseEntity<GlobalResponse> updateFound(@RequestBody PostFoundRequest request, @PathVariable Long postId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
-                postFoundFacade.updatePostFound(request, memberId, postFoundId));
+                postFoundFacade.updatePostFound(request, memberId, postId));
     }
 
-    @DeleteMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> deleteFound(@PathVariable Long postFoundId,
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<GlobalResponse> deleteFound(@PathVariable Long postId,
                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();
 
-        postFoundFacade.deletePostFound(memberId, postFoundId);
+        postFoundFacade.deletePostFound(memberId, postId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK);
     }
 
-    @GetMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> getPostFoundDetail(@PathVariable Long postFoundId) {
-        PostFoundDetailResponse response = postFoundFacade.getPostFoundDetail(postFoundId);
+    @GetMapping("/{postId}")
+    public ResponseEntity<GlobalResponse> getPostFoundDetail(@PathVariable Long postId) {
+
+        PostFoundDetailResponse response = postFoundFacade.getPostFoundDetail(postId);
+
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 
-    @PostMapping("/{postFoundId}/reports")
-    public ResponseEntity<GlobalResponse> reportPostFound(@PathVariable Long postFoundId,
+    @PostMapping("/{postId}/reports")
+    public ResponseEntity<GlobalResponse> reportPostFound(@PathVariable Long postId,
                                                           @RequestBody PostFoundReportRequest request,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         
         Long memberId = userDetails.getId();
-        var response = postFoundReportService.reportPostFound(postFoundId, request, memberId);
+        PostFoundReportResponse response = postFoundReportService.reportPostFound(postId, request, memberId);
         
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }

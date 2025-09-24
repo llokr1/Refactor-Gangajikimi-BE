@@ -28,10 +28,6 @@ public class PostLostQueryService {
         PostLost postLost = postLostRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.POST_NOT_FOUND));
 
-        // TODO: 실제 주소 변환 로직 구현 (현재는 좌표만 반환)
-        String lostLocation = String.format("위도: %f, 경도: %f", 
-                postLost.getLostSpot().getY(), postLost.getLostSpot().getX());
-
         return PostLostDetailResponse.of(
                 postLost.getId(),
                 postLost.getTitle(),
@@ -42,9 +38,13 @@ public class PostLostQueryService {
                 postLost.getContent(),
                 postLost.getLostDate(),
                 postLost.getLostTime(),
-                lostLocation,
-                postLost.getAiImage(),
-                postLost.getRealImage(),
+                postLost.getLostSpot().getX(), // longitude
+                postLost.getLostSpot().getY(), // latitude
+                // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+                // getAddressFromCoordinates(postLost.getLostSpot().getX(), postLost.getLostSpot().getY()),
+                // TODO: Cloud 스토리지 연동 후 활성화
+                // postLost.getAiImage(),
+                // postLost.getRealImage(),
                 postLost.getMember().getMemberName(),
                 postLost.getCreatedAt(),
                 TimeUtil.getTimeAgo(postLost.getCreatedAt())
