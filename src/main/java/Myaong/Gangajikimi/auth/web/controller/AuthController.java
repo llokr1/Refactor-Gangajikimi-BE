@@ -9,6 +9,7 @@ import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<GlobalResponse> signup(@RequestBody SignupRequest request){
+    public ResponseEntity<GlobalResponse> signup(@Valid @RequestBody SignupRequest request){
 
         authService.signup(request);
 
