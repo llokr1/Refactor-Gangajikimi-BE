@@ -6,7 +6,7 @@ import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +20,7 @@ public class PostFoundController {
     private final PostFoundFacade postFoundFacade;
 
     @PostMapping
-    public ResponseEntity<GlobalResponse> postFound(@RequestBody PostFoundRequest request,
+    public ResponseEntity<GlobalResponse> postFound(@Valid @RequestBody PostFoundRequest request,
 
                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -30,7 +30,7 @@ public class PostFoundController {
     }
 
     @PatchMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> updateFound(@RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
+    public ResponseEntity<GlobalResponse> updateFound(@Valid @RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();

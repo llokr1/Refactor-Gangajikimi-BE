@@ -19,12 +19,12 @@ import Myaong.Gangajikimi.chatroom.service.ChatRoomService;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomCreateRequest;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomListResponse;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomResponse;
-import Myaong.Gangajikimi.chatroom.web.dto.delete.ChatRoomDeleteResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "ChatRoom", description = "채팅방 API")
@@ -39,7 +39,7 @@ public class ChatRoomController {
 	@PostMapping
 	public ResponseEntity<GlobalResponse> createChatRoom(
 		@AuthenticationPrincipal CustomUserDetails userDetails,
-		@RequestBody ChatRoomCreateRequest req) {
+		@Valid @RequestBody ChatRoomCreateRequest req) {
 
 		Long memberId = userDetails.getId();
 
