@@ -32,7 +32,9 @@ public enum ErrorCode {
     //POST
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST400", "존재하지 않는 게시글입니다."),
     UNAUTHORIZED_UPDATING(HttpStatus.UNAUTHORIZED, "POST401", "게시글 수정 권한이 없습니다."),
-    UNAUTHORIZED_DELETING(HttpStatus.UNAUTHORIZED, "POST402", "게시글 삭제 권한이 없습니다.");
+    UNAUTHORIZED_DELETING(HttpStatus.UNAUTHORIZED, "POST402", "게시글 삭제 권한이 없습니다."),
+    CANNOT_REPORT_OWN_POST(HttpStatus.BAD_REQUEST, "POST403", "본인의 게시글은 신고할 수 없습니다."),
+    ALREADY_REPORTED(HttpStatus.BAD_REQUEST, "POST404", "이미 신고한 게시글입니다.");
 
 
 

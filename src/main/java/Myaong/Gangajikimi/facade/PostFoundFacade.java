@@ -8,18 +8,10 @@ import Myaong.Gangajikimi.postfound.service.PostFoundCommandService;
 import Myaong.Gangajikimi.postfound.service.PostFoundQueryService;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundResponse;
-import Myaong.Gangajikimi.postlost.entity.PostLost;
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
-import Myaong.Gangajikimi.postlost.web.dto.response.PostLostPostResponse;
-
-import Myaong.Gangajikimi.templocation.entity.TempLocation;
+import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
 import Myaong.Gangajikimi.templocation.service.TempLocationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -73,6 +65,11 @@ public class PostFoundFacade {
         PostFound postFound = postFoundQueryService.findPostFoundById(postFoundId);
 
         postFoundCommandService.deletePostFound(postFound, member);
+    }
+
+    public PostFoundDetailResponse getPostFoundDetail(Long postFoundId) {
+
+        return postFoundQueryService.getPostFoundDetail(postFoundId);
     }
 
 }
