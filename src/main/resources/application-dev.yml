@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: dev
   datasource:
     url: jdbc:postgresql://gangajikimi-db.cjsgei08gb4x.ap-northeast-2.rds.amazonaws.com:5432/postgres
     username: postgres
@@ -40,3 +40,9 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+cloud:
+  aws:
+    s3:
+      bucket: gangajikimi-server   # 버킷 이름
+    region: ap-northeast-2          # 서울 리전
+
