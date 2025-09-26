@@ -4,6 +4,7 @@ import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
+import Myaong.Gangajikimi.postfound.web.docs.PostFoundControllerDocs;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/found-posts")
-public class PostFoundController {
+public class PostFoundController implements PostFoundControllerDocs {
 
     private final PostFoundFacade postFoundFacade;
     private final PostFoundReportService postFoundReportService;

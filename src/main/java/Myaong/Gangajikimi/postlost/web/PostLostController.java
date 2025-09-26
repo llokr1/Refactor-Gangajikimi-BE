@@ -5,6 +5,7 @@ import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostLostFacade;
+import Myaong.Gangajikimi.postlost.web.docs.PostLostControllerDocs;
 import Myaong.Gangajikimi.postlostreport.service.PostLostReportService;
 import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/lost-posts")
-public class PostLostController {
+public class PostLostController implements PostLostControllerDocs {
 
     private final PostLostFacade postLostFacade;
     private final PostLostReportService postLostReportService;
