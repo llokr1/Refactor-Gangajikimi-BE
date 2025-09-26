@@ -35,4 +35,15 @@ public class MemberService {
 		return memberRepository.save(member);
 
 	}
+
+	public boolean isEmailDuplicate(String email) {
+    
+		return memberRepository.existsByEmail(email);
+  }
+
+	public boolean isNicknameDuplicate(String nickname) {
+    
+		return memberRepository.existsByMemberName(nickname);
+
+	}
 }
