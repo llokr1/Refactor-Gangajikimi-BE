@@ -9,7 +9,9 @@ import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
 
+import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postfoundreport.service.PostFoundReportService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +26,7 @@ public class PostFoundController {
     private final PostFoundReportService postFoundReportService;
 
     @PostMapping
-    public ResponseEntity<GlobalResponse> postFound(@RequestBody PostFoundRequest request,
+    public ResponseEntity<GlobalResponse> postFound(@Valid @RequestBody PostFoundRequest request,
 
                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -34,7 +36,7 @@ public class PostFoundController {
     }
 
     @PatchMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> updateFound(@RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
+    public ResponseEntity<GlobalResponse> updateFound(@Valid @RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();

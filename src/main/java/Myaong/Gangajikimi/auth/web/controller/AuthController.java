@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<GlobalResponse> login(@RequestBody LoginRequest request, HttpServletResponse response){
+    public ResponseEntity<GlobalResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response){
 
         // Http 응답 객체 생성
         LoginResponse loginResponse = authService.login(request, response);

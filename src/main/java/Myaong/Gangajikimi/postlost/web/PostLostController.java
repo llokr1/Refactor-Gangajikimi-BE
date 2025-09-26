@@ -8,6 +8,8 @@ import Myaong.Gangajikimi.facade.PostLostFacade;
 import Myaong.Gangajikimi.postlostreport.service.PostLostReportService;
 import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+
+import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class PostLostController {
 
 
     @PostMapping
-    public ResponseEntity<GlobalResponse> postLost(@RequestBody PostLostRequest request,
+    public ResponseEntity<GlobalResponse> postLost(@Valid @RequestBody PostLostRequest request,
                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();
@@ -34,7 +36,7 @@ public class PostLostController {
     }
 
     @PatchMapping("/{postLostId}")
-    public ResponseEntity<GlobalResponse> updateLost(@RequestBody PostLostRequest request, @PathVariable Long postLostId,
+    public ResponseEntity<GlobalResponse> updateLost(@Valid @RequestBody PostLostRequest request, @PathVariable Long postLostId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Long memberId = userDetails.getId();

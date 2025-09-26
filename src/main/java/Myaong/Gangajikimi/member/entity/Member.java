@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, unique = true)
 	private String memberName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column
