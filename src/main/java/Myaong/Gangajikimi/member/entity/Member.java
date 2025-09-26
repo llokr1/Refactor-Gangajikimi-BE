@@ -3,7 +3,6 @@ package Myaong.Gangajikimi.member.entity;
 import Myaong.Gangajikimi.auth.web.dto.SignupRequest;
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.AccountStatus;
-import Myaong.Gangajikimi.common.enums.Gender;
 import Myaong.Gangajikimi.common.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String memberName;
 
 	@Column(nullable = false)
