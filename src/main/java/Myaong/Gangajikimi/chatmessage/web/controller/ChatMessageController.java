@@ -1,7 +1,5 @@
 package Myaong.Gangajikimi.chatmessage.web.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +14,6 @@ import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
 import Myaong.Gangajikimi.chatmessage.service.ChatMessageService;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessageFinalResponse;
 import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessagePagingRequest;
-import Myaong.Gangajikimi.chatmessage.web.dto.ChatMessageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Message", description = "메시지 API")
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/messages")
 @RequiredArgsConstructor
 public class ChatMessageController {
 	private final ChatMessageService messageService;

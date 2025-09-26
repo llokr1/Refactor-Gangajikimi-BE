@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +15,6 @@ import Myaong.Gangajikimi.chatroom.service.ChatRoomService;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomCreateRequest;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomListResponse;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomResponse;
-import Myaong.Gangajikimi.chatroom.web.dto.delete.ChatRoomDeleteResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "ChatRoom", description = "채팅방 API")
 @RestController
-@RequestMapping("/chatrooms")
+@RequestMapping("/api/chatrooms")
 @RequiredArgsConstructor
 public class ChatRoomController {
 	private final ChatRoomService chatRoomService;
