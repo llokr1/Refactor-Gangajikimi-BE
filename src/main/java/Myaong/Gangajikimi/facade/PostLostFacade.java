@@ -1,7 +1,5 @@
 package Myaong.Gangajikimi.facade;
 
-import Myaong.Gangajikimi.common.exception.GeneralException;
-import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.member.service.MemberService;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
@@ -9,6 +7,7 @@ import Myaong.Gangajikimi.postlost.service.PostLostCommandService;
 import Myaong.Gangajikimi.postlost.service.PostLostQueryService;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostPostResponse;
+import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,6 +57,10 @@ public class PostLostFacade {
         PostLost postLost = postLostQueryService.findPostLostById(postLostId);
 
         postLostCommandService.deletePostLost(postLost, member);
+    }
+
+    public PostLostDetailResponse getPostLostDetail(Long postLostId) {
+        return postLostQueryService.getPostLostDetail(postLostId);
     }
 
 }

@@ -19,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String memberName;
 
 	@Column(nullable = false, unique = true)
