@@ -5,6 +5,7 @@ import Myaong.Gangajikimi.auth.web.dto.LoginRequest;
 import Myaong.Gangajikimi.auth.web.dto.LoginResponse;
 import Myaong.Gangajikimi.auth.web.dto.SignupRequest;
 import Myaong.Gangajikimi.auth.web.dto.TokenResponse;
+import Myaong.Gangajikimi.auth.web.docs.AuthControllerDocs;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     private final AuthService authService;
 

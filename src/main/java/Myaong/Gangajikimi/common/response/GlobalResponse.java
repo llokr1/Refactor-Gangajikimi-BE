@@ -2,6 +2,7 @@ package Myaong.Gangajikimi.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +10,19 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @RequiredArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
+@Schema(description = "API 응답 공통 형식")
 public class GlobalResponse {
 
+    @Schema(description = "요청 성공 여부", example = "true")
     private final Boolean isSuccess;
+
+    @Schema(description = "응답 코드", example = "COMMON200")
     private final String code;
+
+    @Schema(description = "응답 메시지", example = "SUCCESS!")
     private final String message;
+
+    @Schema(description = "응답 데이터 (성공 시에만 포함)", example = "{\"id\": 1, \"name\": \"example\"}")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Object result;
 

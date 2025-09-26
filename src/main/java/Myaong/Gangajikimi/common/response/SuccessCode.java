@@ -1,11 +1,13 @@
 package Myaong.Gangajikimi.common.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
+@Schema(description = "성공 응답 코드")
 public enum SuccessCode {
 
     OK(HttpStatus.OK, "COMMON200", "SUCCESS!"),
