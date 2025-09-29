@@ -196,4 +196,118 @@ public interface PostLostControllerDocs {
         @RequestBody PostLostReportRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails
     );
+
+    @Operation(
+        summary = "잃어버렸어요 게시글 목록 조회",
+        description = "잃어버렸어요 게시글 목록을 페이지네이션으로 조회합니다. 최신순으로 정렬됩니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "게시글 목록 조회 성공",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = GlobalResponse.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": true,
+                            "code": "COMMON200",
+                            "message": "SUCCESS!",
+                            "result": {
+                                "posts": [
+                                    {
+                                        "id": 1,
+                                        "title": "강아지를 잃어버렸습니다",
+                                        "dogType": "MALTESE",
+                                        "dogColor": "흰색",
+                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "lostDateTime": "2024-01-01T14:30:00",
+                                        "image": "https://example.com/image1.jpg",
+                                        "type": "LOST",
+                                        "status": "상태"
+                                    },
+                                    {
+                                        "id": 2,
+                                        "title": "고양이를 잃어버렸습니다",
+                                        "dogType": "PERSIAN",
+                                        "dogColor": "회색",
+                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "lostDateTime": "2024-01-01T13:00:00",
+                                        "image": "https://example.com/image2.jpg",
+                                        "type": "LOST",
+                                        "status": "상태"
+                                    }
+                                ],
+                                "hasNext": true
+                            }
+                        }
+                        """,
+                    description = "result: PageResponse 객체 - posts(HomePostResponse 배열), hasNext(다음 페이지 존재 여부)"
+                )
+            )
+        )
+    })
+    ResponseEntity<GlobalResponse> getLostPosts(
+        @io.swagger.v3.oas.annotations.Parameter(
+            description = "페이지 번호 (0부터 시작)",
+            example = "0"
+        ) Integer page,
+        @io.swagger.v3.oas.annotations.Parameter(
+            description = "페이지 크기",
+            example = "20"
+        ) Integer size
+    );
+
+    @Operation(
+        summary = "내 잃어버렸어요 게시글 조회",
+        description = "로그인한 사용자가 작성한 잃어버렸어요 게시글 목록을 페이지네이션으로 조회합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "내 게시글 목록 조회 성공",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = GlobalResponse.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": true,
+                            "code": "COMMON200",
+                            "message": "SUCCESS!",
+                            "result": {
+                                "posts": [
+                                    {
+                                        "id": 1,
+                                        "title": "강아지를 잃어버렸습니다",
+                                        "dogType": "MALTESE",
+                                        "dogColor": "흰색",
+                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "lostDateTime": "2024-01-01T14:30:00",
+                                        "image": "https://example.com/image1.jpg",
+                                        "type": "LOST",
+                                        "status": "상태"
+                                    }
+                                ],
+                                "hasNext": false
+                            }
+                        }
+                        """,
+                    description = "result: PageResponse 객체 - posts(HomePostResponse 배열), hasNext(다음 페이지 존재 여부)"
+                )
+            )
+        )
+    })
+    ResponseEntity<GlobalResponse> getMyLostPosts(
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+        @io.swagger.v3.oas.annotations.Parameter(
+            description = "페이지 번호 (0부터 시작)",
+            example = "0"
+        ) Integer page,
+        @io.swagger.v3.oas.annotations.Parameter(
+            description = "페이지 크기",
+            example = "20"
+        ) Integer size
+    );
 }

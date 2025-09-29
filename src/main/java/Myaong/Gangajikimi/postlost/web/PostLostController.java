@@ -2,6 +2,7 @@ package Myaong.Gangajikimi.postlost.web;
 
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.dto.PageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostLostFacade;
@@ -9,6 +10,7 @@ import Myaong.Gangajikimi.postlost.web.docs.PostLostControllerDocs;
 import Myaong.Gangajikimi.postlostreport.service.PostLostReportService;
 import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import Myaong.Gangajikimi.postlost.service.PostLostQueryService;
 
 import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
@@ -24,6 +26,7 @@ public class PostLostController implements PostLostControllerDocs {
 
     private final PostLostFacade postLostFacade;
     private final PostLostReportService postLostReportService;
+    private final PostLostQueryService postLostQueryService;
 
 
     @PostMapping
@@ -55,6 +58,29 @@ public class PostLostController implements PostLostControllerDocs {
         postLostFacade.deletePostLost(memberId, postLostId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<GlobalResponse> getLostPosts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        
+        PageResponse response = postLostQueryService.getLostPosts(page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @GetMapping("/my-posts")
+    public ResponseEntity<GlobalResponse> getMyLostPosts(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+
+        Long memberId = userDetails.getId();
+
+        PageResponse response = postLostQueryService.getMyLostPosts(memberId, page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 
     @GetMapping("/{postLostId}")
