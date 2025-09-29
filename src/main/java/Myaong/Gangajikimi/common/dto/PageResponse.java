@@ -8,16 +8,16 @@ import java.util.List;
 @Getter
 public class PageResponse {
     
-    private List<HomePostResponse> content;
+    private List<?> content;
     private boolean hasNext;
 
     @Builder
-    private PageResponse(List<HomePostResponse> content, boolean hasNext) {
+    private PageResponse(List<?> content, boolean hasNext) {
         this.content = content;
         this.hasNext = hasNext;
     }
 
-    public static PageResponse of(List<HomePostResponse> content, boolean hasNext) {
+    public static PageResponse of(List<?> content, boolean hasNext) {
         return PageResponse.builder()
                 .content(content)
                 .hasNext(hasNext)
