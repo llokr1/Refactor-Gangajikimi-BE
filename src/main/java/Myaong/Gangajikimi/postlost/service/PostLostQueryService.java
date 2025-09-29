@@ -1,7 +1,7 @@
 package Myaong.Gangajikimi.postlost.service;
 
 import Myaong.Gangajikimi.common.dto.PageResponse;
-import Myaong.Gangajikimi.common.dto.HomePostResponse;
+import Myaong.Gangajikimi.postlost.web.dto.response.PostLostHomeResponse;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.common.util.TimeUtil;
@@ -69,9 +69,9 @@ public class PostLostQueryService {
         
         // TODO: 필터링 기능 구현 예정
         
-        List<HomePostResponse> lostResponses = lostPosts.getContent().stream()
-        // PostLost를 HomePostResponse로 변환
-            .map(Myaong.Gangajikimi.common.dto.HomePostResponse::from)
+        List<PostLostHomeResponse> lostResponses = lostPosts.getContent().stream()
+        // PostLost를 PostLostHomeResponse로 변환
+            .map(PostLostHomeResponse::from)
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용
@@ -87,9 +87,9 @@ public class PostLostQueryService {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<PostLost> lostPosts = postLostRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
         
-        // PostLost를 HomePostResponse로 변환
+        // PostLost를 PostLostHomeResponse로 변환
         var lostResponses = lostPosts.getContent().stream()
-            .map(Myaong.Gangajikimi.common.dto.HomePostResponse::from)
+            .map(PostLostHomeResponse::from)
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용
