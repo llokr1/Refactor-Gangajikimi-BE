@@ -34,18 +34,14 @@ public interface PostLostControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
-                                "postLostId": 1,
-                                "title": "지갑을 잃어버렸습니다",
-                                "content": "어제 지하철에서 지갑을 잃어버렸습니다...",
-                                "lostLocation": "강남역",
-                                "lostDate": "2024-01-01",
-                                "authorId": 1,
-                                "authorNickname": "사용자1",
-                                "createdAt": "2024-01-01T12:00:00"
+                                "postId": 1,
+                                "memberName": "홍길동",
+                                "postTitle": "강아지를 잃어버렸습니다",
+                                "postDate": "2024-01-01T12:00:00"
                             }
                         }
                         """,
-                    description = "result: PostLostResponse 객체 - postLostId(게시글 ID), title(제목), content(내용), lostLocation(분실 장소), lostDate(분실 날짜), authorId(작성자 ID), authorNickname(작성자 닉네임), createdAt(작성일시)"
+                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(제목), postDate(작성일시)"
                 )
             )
         )
@@ -73,14 +69,14 @@ public interface PostLostControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
-                                "postLostId": 1,
-                                "title": "수정된 제목",
-                                "content": "수정된 내용",
-                                "updatedAt": "2024-01-01T13:00:00"
+                                "postId": 1,
+                                "memberName": "홍길동",
+                                "postTitle": "수정된 제목",
+                                "postDate": "2024-01-01T13:00:00"
                             }
                         }
                         """,
-                    description = "result: PostLostResponse 객체 - postLostId(게시글 ID), title(수정된 제목), content(수정된 내용), updatedAt(수정일시)"
+                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(수정된 제목), postDate(수정일시)"
                 )
             )
         )
@@ -139,20 +135,25 @@ public interface PostLostControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
-                                "postLostId": 1,
-                                "title": "지갑을 잃어버렸습니다",
-                                "content": "어제 지하철에서 지갑을 잃어버렸습니다...",
-                                "lostLocation": "강남역",
+                                "postId": 1,
+                                "title": "강아지를 잃어버렸습니다",
+                                "dogName": "멍멍이",
+                                "dogType": "MALTESE",
+                                "dogColor": "흰색",
+                                "dogGender": "MALE",
+                                "content": "어제 공원에서 강아지를 잃어버렸습니다...",
                                 "lostDate": "2024-01-01",
+                                "lostTime": "2024-01-01T14:30:00",
+                                "longitude": 127.0276,
+                                "latitude": 37.4979,
                                 "authorId": 1,
-                                "authorNickname": "사용자1",
+                                "authorName": "홍길동",
                                 "createdAt": "2024-01-01T12:00:00",
-                                "updatedAt": "2024-01-01T12:00:00",
-                                "images": ["image1.jpg", "image2.jpg"]
+                                "timeAgo": "2시간 전"
                             }
                         }
                         """,
-                    description = "result: PostLostDetailResponse 객체 - postLostId(게시글 ID), title(제목), content(내용), lostLocation(분실 장소), lostDate(분실 날짜), authorId(작성자 ID), authorNickname(작성자 닉네임), createdAt(작성일시), updatedAt(수정일시), images(이미지 목록)"
+                    description = "result: PostLostDetailResponse 객체 - postId(게시글 ID), title(제목), dogName(강아지 이름), dogType(견종), dogColor(색상), dogGender(성별), content(내용), lostDate(분실 날짜), lostTime(분실 시간), longitude(경도), latitude(위도), authorId(작성자 ID), authorName(작성자명), createdAt(작성일시), timeAgo(상대시간)"
                 )
             )
         )
@@ -177,16 +178,12 @@ public interface PostLostControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
-                                "reportId": 1,
-                                "postLostId": 1,
-                                "reporterId": 2,
-                                "reportType": "SPAM",
-                                "reportReason": "스팸 게시글입니다",
+                                "postId": 1,
                                 "createdAt": "2024-01-01T12:00:00"
                             }
                         }
                         """,
-                    description = "result: PostLostReportResponse 객체 - reportId(신고 ID), postLostId(게시글 ID), reporterId(신고자 ID), reportType(신고 유형), reportReason(신고 사유), createdAt(신고일시)"
+                    description = "result: PostLostReportResponse 객체 - postId(게시글 ID), createdAt(신고일시)"
                 )
             )
         )
