@@ -33,15 +33,14 @@ public interface AuthControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
+                                "userId": 1,
+                                "memberName": "홍길동",
                                 "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                                "memberId": 1,
-                                "email": "user@example.com",
-                                "nickname": "사용자닉네임"
+                                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                             }
                         }
                         """,
-                    description = "result: LoginResponse 객체 - accessToken(액세스 토큰), refreshToken(리프레시 토큰), memberId(회원 ID), email(이메일), nickname(닉네임)"
+                    description = "result: LoginResponse 객체 - userId(사용자 ID), memberName(회원명), accessToken(액세스 토큰), refreshToken(리프레시 토큰)"
                 )
             )
         )

@@ -67,6 +67,7 @@ public class DogTypeService {
      */
     public List<String> getAllDogTypes() {
         // DB에서 모든 견종 조회
+
         List<DogType> results = dogTypeRepository.findAll();
         
         return results.stream()
