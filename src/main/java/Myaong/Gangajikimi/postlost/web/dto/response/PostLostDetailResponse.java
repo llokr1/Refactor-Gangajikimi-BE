@@ -1,7 +1,7 @@
 package Myaong.Gangajikimi.postlost.web.dto.response;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
 import lombok.Builder;
 import lombok.Getter;
 

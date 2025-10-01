@@ -22,7 +22,7 @@ public class PostLostRequest {
     String dogName; // 강아지 이름
 
     @NotNull
-    String dogType; // 강아지 종류
+    String dogType; // 견종 이름
 
     @NotNull
     String dogColor; // 강아지 색깔

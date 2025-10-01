@@ -35,7 +35,7 @@ public class QPostFound extends EntityPathBase<PostFound> {
 
     public final EnumPath<Myaong.Gangajikimi.common.enums.DogGender> dogGender = createEnum("dogGender", Myaong.Gangajikimi.common.enums.DogGender.class);
 
-    public final EnumPath<Myaong.Gangajikimi.common.enums.DogType> dogType = createEnum("dogType", Myaong.Gangajikimi.common.enums.DogType.class);
+    public final Myaong.Gangajikimi.dogtype.entity.QDogType dogType;
 
     public final DatePath<java.time.LocalDate> foundDate = createDate("foundDate", java.time.LocalDate.class);
 
@@ -75,6 +75,7 @@ public class QPostFound extends EntityPathBase<PostFound> {
 
     public QPostFound(Class<? extends PostFound> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.dogType = inits.isInitialized("dogType") ? new Myaong.Gangajikimi.dogtype.entity.QDogType(forProperty("dogType")) : null;
         this.member = inits.isInitialized("member") ? new Myaong.Gangajikimi.member.entity.QMember(forProperty("member")) : null;
     }
 

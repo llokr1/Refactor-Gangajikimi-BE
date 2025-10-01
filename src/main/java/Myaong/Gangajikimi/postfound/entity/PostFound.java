@@ -1,7 +1,7 @@
 package Myaong.Gangajikimi.postfound.entity;
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.templocation.entity.TempLocation;
@@ -30,8 +30,8 @@ public class PostFound extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dog_type_id", nullable = false)
     private DogType dogType; // 견종
 
     @Column(nullable = false)
@@ -111,9 +111,8 @@ public class PostFound extends BaseEntity {
                 .build();
     }
 
-    public void update(PostFoundRequest request, Point foundSpot) {
+    public void update(PostFoundRequest request, Point foundSpot, DogType dogType) {
 
-        DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         // TODO: 이미지 업데이트 로직은 별도 처리 필요 (MultipartFile -> String 변환)
