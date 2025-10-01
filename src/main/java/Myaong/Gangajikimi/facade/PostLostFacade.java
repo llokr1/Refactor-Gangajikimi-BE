@@ -11,6 +11,9 @@ import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class PostLostFacade {
     private final PostLostQueryService postLostQueryService;
 
     @Transactional
-    public PostLostPostResponse postPostLost(PostLostRequest request, Long memberId){
+    public PostLostPostResponse postPostLost(PostLostRequest request, Long memberId, List<MultipartFile> images){
 
         // Member 생성
         Member member = memberService.findMemberById(memberId);
@@ -29,7 +32,7 @@ public class PostLostFacade {
         // TODO: 생성된 AI 이미지 추가
 
         // 게시글 생성
-        PostLost postLost = postLostCommandService.postPostLost(request, member);
+        PostLost postLost = postLostCommandService.postPostLost(request, member, images);
 
         // DB 저장
 
@@ -37,7 +40,7 @@ public class PostLostFacade {
     }
 
     @Transactional
-    public PostLostPostResponse updatePostLost(PostLostRequest request, Long memberId, Long postLostId){
+    public PostLostPostResponse updatePostLost(PostLostRequest request, Long memberId, Long postLostId, List<MultipartFile> images){
 
         // Member 조회
         Member member = memberService.findMemberById(memberId);
@@ -46,7 +49,7 @@ public class PostLostFacade {
         PostLost postLost = postLostQueryService.findPostLostById(postLostId);
 
         //업데이트 후 결과 반환
-        return PostLostPostResponse.from(postLostCommandService.updatePostLost(request, member, postLost));
+        return PostLostPostResponse.from(postLostCommandService.updatePostLost(request, member, postLost, images));
     }
 
     @Transactional

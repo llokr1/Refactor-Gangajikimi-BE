@@ -1,7 +1,6 @@
 package Myaong.Gangajikimi.postlost.web.docs;
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,25 @@ public interface PostLostControllerDocs {
 
     @Operation(
         summary = "분실물 게시글 작성",
-        description = "새로운 분실물 게시글을 작성합니다. 제목, 내용, 분실 장소, 분실 날짜, 이미지 등의 정보가 필요합니다."
+        description = """
+            Multipart/form-data 형식으로 data(JSON)와 images(이미지 파일)를 전송합니다.
+            
+            **작성 예시(data)**:
+            ```json
+            {
+              "title": "강아지를 잃어버렸습니다",
+              "dogName": "멍멍이",
+              "dogType": "골든리트리버",
+              "dogColor": "갈색",
+              "dogGender": "FEMALE",
+              "features": "귀여운 목걸이",
+              "lostDate": "2024-01-01",
+              "lostTime": "2024-01-01T14:30:00",
+              "lostLongitude": 127.0276,
+              "lostLatitude": 37.4979
+            }
+            ```
+            """
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -47,13 +64,32 @@ public interface PostLostControllerDocs {
         )
     })
     ResponseEntity<GlobalResponse> postLost(
-        @RequestBody PostLostRequest request,
+        String dataJson,
+        java.util.List<org.springframework.web.multipart.MultipartFile> images,
         @AuthenticationPrincipal CustomUserDetails userDetails
-    );
+    ) throws com.fasterxml.jackson.core.JsonProcessingException;
 
     @Operation(
         summary = "분실물 게시글 수정",
-        description = "기존 분실물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다."
+        description = """
+            기존 분실물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다.
+            
+            **작성 예시(data)**:
+            ```json
+            {
+              "title": "강아지를 잃어버렸습니다",
+              "dogName": "멍멍이",
+              "dogType": "골든리트리버",
+              "dogColor": "갈색",
+              "dogGender": "FEMALE",
+              "features": "귀여운 목걸이",
+              "lostDate": "2024-01-01",
+              "lostTime": "2024-01-01T14:30:00",
+              "lostLongitude": 127.0276,
+              "lostLatitude": 37.4979
+            }
+            ```
+            """
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -82,10 +118,11 @@ public interface PostLostControllerDocs {
         )
     })
     ResponseEntity<GlobalResponse> updateLost(
-        @RequestBody PostLostRequest request,
+        String dataJson,
+        java.util.List<org.springframework.web.multipart.MultipartFile> images,
         @PathVariable Long postLostId,
         @AuthenticationPrincipal CustomUserDetails userDetails
-    );
+    ) throws com.fasterxml.jackson.core.JsonProcessingException;
 
     @Operation(
         summary = "분실물 게시글 삭제",

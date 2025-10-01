@@ -15,6 +15,7 @@ import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class PostLost extends BaseEntity {
     private String dogName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dog_type_id", nullable = false)
+    @JoinColumn(name = "dog_type_id", nullable = true)
     private DogType dogType; // 견종
 
     @Column(nullable = false)

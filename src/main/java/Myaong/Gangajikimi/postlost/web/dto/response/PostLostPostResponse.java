@@ -36,6 +36,7 @@ public class PostLostPostResponse {
                 .postId(postLost.getId())
                 .memberName(postLost.getMember().getMemberName())
                 .postTitle(postLost.getTitle())
+                .postDate(postLost.getCreatedAt())
                 .build();
     }
 }

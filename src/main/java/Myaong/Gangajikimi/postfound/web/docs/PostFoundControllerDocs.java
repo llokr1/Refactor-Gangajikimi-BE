@@ -1,7 +1,6 @@
 package Myaong.Gangajikimi.postfound.web.docs;
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
-import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,25 @@ public interface PostFoundControllerDocs {
 
     @Operation(
         summary = "습득물 게시글 작성",
-        description = "새로운 습득물 게시글을 작성합니다. 제목, 내용, 습득 장소, 습득 날짜, 이미지 등의 정보가 필요합니다."
+        description = """
+            Multipart/form-data 형식으로 data(JSON)와 images(이미지 파일)를 전송합니다.
+            
+            
+            **작성 예시(data)**:
+            ```json
+            {
+              "title": "강아지를 주웠습니다",
+              "dogType": "말티즈",
+              "dogColor": "흰색",
+              "dogGender": "MALE",
+              "features": "목걸이가 있었습니다",
+              "foundDate": "2024-01-01",
+              "foundTime": "2024-01-01T14:30:00",
+              "foundLongitude": 127.0276,
+              "foundLatitude": 37.4979
+            }
+            ```
+            """
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -44,16 +61,85 @@ public interface PostFoundControllerDocs {
                     description = "result: PostFoundResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(제목), postDate(작성일시)"
                 )
             )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "잘못된 요청 (필수 필드 누락, 잘못된 데이터 형식 등)",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "VALIDATION_ERROR",
+                            "message": "입력값이 올바르지 않습니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패 (토큰이 없거나 유효하지 않음)",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "UNAUTHORIZED",
+                            "message": "인증이 필요합니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "견종을 찾을 수 없음",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "DOG_TYPE_NOT_FOUND",
+                            "message": "존재하지 않는 견종입니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
         )
     })
     ResponseEntity<GlobalResponse> postFound(
-        @RequestBody PostFoundRequest request,
+        String dataJson,
+        java.util.List<org.springframework.web.multipart.MultipartFile> images,
         @AuthenticationPrincipal CustomUserDetails userDetails
-    );
+    ) throws com.fasterxml.jackson.core.JsonProcessingException;
 
     @Operation(
         summary = "습득물 게시글 수정",
-        description = "기존 습득물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다."
+        description = """
+            기존 습득물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다.
+            
+                        **작성 예시(data)**:
+            ```json
+            {
+              "title": "강아지를 주웠습니다",
+              "dogType": "말티즈",
+              "dogColor": "흰색",
+              "dogGender": "MALE",
+              "features": "목걸이가 있었습니다",
+              "foundDate": "2024-01-01",
+              "foundTime": "2024-01-01T14:30:00",
+              "foundLongitude": 127.0276,
+              "foundLatitude": 37.4979
+            }
+            ```
+            """
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -82,10 +168,11 @@ public interface PostFoundControllerDocs {
         )
     })
     ResponseEntity<GlobalResponse> updateFound(
-        @RequestBody PostFoundRequest request,
+        String dataJson,
+        java.util.List<org.springframework.web.multipart.MultipartFile> images,
         @PathVariable Long postFoundId,
         @AuthenticationPrincipal CustomUserDetails userDetails
-    );
+    ) throws com.fasterxml.jackson.core.JsonProcessingException;
 
     @Operation(
         summary = "습득물 게시글 삭제",

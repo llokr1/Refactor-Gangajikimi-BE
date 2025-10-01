@@ -12,8 +12,11 @@ import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import Myaong.Gangajikimi.postlost.service.PostLostQueryService;
 
-import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,26 +30,36 @@ public class PostLostController implements PostLostControllerDocs {
     private final PostLostFacade postLostFacade;
     private final PostLostReportService postLostReportService;
     private final PostLostQueryService postLostQueryService;
+    private final ObjectMapper objectMapper;
 
 
-    @PostMapping
-    public ResponseEntity<GlobalResponse> postLost(@Valid @RequestBody PostLostRequest request,
-                                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<GlobalResponse> postLost(
+            @RequestPart("data") String dataJson,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserDetails userDetails) throws JsonProcessingException {
 
         Long memberId = userDetails.getId();
+        
+        PostLostRequest request = objectMapper.readValue(dataJson, PostLostRequest.class);
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
-                postLostFacade.postPostLost(request, memberId));
+                postLostFacade.postPostLost(request, memberId, images));
     }
 
-    @PatchMapping("/{postLostId}")
-    public ResponseEntity<GlobalResponse> updateLost(@Valid @RequestBody PostLostRequest request, @PathVariable Long postLostId,
-                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PatchMapping(value = "/{postLostId}", consumes = "multipart/form-data")
+    public ResponseEntity<GlobalResponse> updateLost(@RequestPart("data") String dataJson,
+                                                     @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                     @PathVariable Long postLostId,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails) throws JsonProcessingException {
 
         Long memberId = userDetails.getId();
+        
+        PostLostRequest request = objectMapper.readValue(dataJson, PostLostRequest.class);
+
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
-                postLostFacade.updatePostLost(request, memberId, postLostId));
+                postLostFacade.updatePostLost(request, memberId, postLostId, images));
     }
 
     @DeleteMapping("/{postLostId}")
