@@ -8,6 +8,7 @@ import Myaong.Gangajikimi.common.util.TimeUtil;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
 import Myaong.Gangajikimi.postlost.repository.PostLostRepository;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
+import Myaong.Gangajikimi.s3file.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PostLostQueryService {
 
     private final PostLostRepository postLostRepository;
+    private final S3Service s3Service;
 
     public PostLost findPostLostById(Long postId) {
 
@@ -35,6 +37,18 @@ public class PostLostQueryService {
     public PostLostDetailResponse getPostLostDetail(Long postId) {
         PostLost postLost = postLostRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.POST_NOT_FOUND));
+
+        // 이미지 Presigned URL 생성 (실제 이미지만)
+        List<String> realImageUrls = null;
+        if (postLost.getRealImage() != null && !postLost.getRealImage().isEmpty()) {
+            realImageUrls = s3Service.generatePresignedUrls(postLost.getRealImage());
+        }
+
+        // TODO: AI 이미지 생성 로직 구현 후 활성화
+        // String aiImageUrl = null;
+        // if (postLost.getAiImage() != null && !postLost.getAiImage().isEmpty()) {
+        //     aiImageUrl = s3Service.generatePresignedUrl(postLost.getAiImage());
+        // }
 
         return PostLostDetailResponse.of(
                 postLost.getId(),
@@ -50,9 +64,9 @@ public class PostLostQueryService {
                 postLost.getLostSpot().getY(), // latitude
                 // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
                 // getAddressFromCoordinates(postLost.getLostSpot().getX(), postLost.getLostSpot().getY()),
-                // TODO: Cloud 스토리지 연동 후 활성화
-                // postLost.getAiImage(),
-                // postLost.getRealImage(),
+                // TODO: AI 이미지 생성 로직 구현 후 활성화
+                // aiImageUrl,
+                realImageUrls,
                 postLost.getMember().getId(), // authorId
                 postLost.getMember().getMemberName(),
                 postLost.getCreatedAt(),

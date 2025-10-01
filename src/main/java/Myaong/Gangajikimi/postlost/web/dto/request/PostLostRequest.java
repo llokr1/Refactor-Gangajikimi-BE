@@ -3,6 +3,7 @@ package Myaong.Gangajikimi.postlost.web.dto.request;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 public class PostLostRequest {
 
-    List<String> dogImages; // 강아지 실제 사진들
+    List<MultipartFile> dogImages; // 강아지 실제 사진들
 
     @NotNull
     String title; // 제목

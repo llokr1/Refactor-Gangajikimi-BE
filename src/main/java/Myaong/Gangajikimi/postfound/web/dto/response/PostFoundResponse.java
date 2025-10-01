@@ -1,7 +1,6 @@
 package Myaong.Gangajikimi.postfound.web.dto.response;
 
 import Myaong.Gangajikimi.postfound.entity.PostFound;
-import Myaong.Gangajikimi.postlost.web.dto.response.PostLostPostResponse;
 import lombok.Builder;
 import lombok.Getter;
 

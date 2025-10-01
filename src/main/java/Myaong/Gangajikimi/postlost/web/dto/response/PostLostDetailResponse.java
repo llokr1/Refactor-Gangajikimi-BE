@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class PostLostDetailResponse {
@@ -24,9 +25,9 @@ public class PostLostDetailResponse {
     private Double latitude;
     // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
     // private String address;
-    // TODO: Cloud 스토리지 연동 후 활성화
-    // private String aiImage;
-    // private List<String> realImages;
+    // TODO: AI 이미지 생성 로직 구현 후 활성화
+    // private String aiImage; // AI 생성 이미지 Presigned URL
+    private List<String> realImages; // 실제 이미지 Presigned URL 목록
     private Long authorId;
     private String authorName;
     private LocalDateTime createdAt;
@@ -38,8 +39,9 @@ public class PostLostDetailResponse {
                                   LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
                                   // TODO: 주소 변환 API 연동 후 활성화
                                   // String address,
-                                  // TODO: Cloud 스토리지 연동 후 활성화
-                                  // String aiImage, List<String> realImages, 
+                                  // TODO: AI 이미지 생성 로직 구현 후 활성화
+                                  // String aiImage, 
+                                  List<String> realImages,
                                   Long authorId, String authorName,
                                   LocalDateTime createdAt, String timeAgo) {
         this.postId = postId;
@@ -55,9 +57,9 @@ public class PostLostDetailResponse {
         this.latitude = latitude;
         // TODO: 주소 변환 API 연동 후 활성화
         // this.address = address;
-        // TODO: Cloud 스토리지 연동 후 활성화
+        // TODO: AI 이미지 생성 로직 구현 후 활성화
         // this.aiImage = aiImage;
-        // this.realImages = realImages;
+        this.realImages = realImages;
         this.authorId = authorId;
         this.authorName = authorName;
         this.createdAt = createdAt;
@@ -69,8 +71,9 @@ public class PostLostDetailResponse {
                                           LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
                                           // TODO: 주소 변환 API 연동 후 활성화
                                           // String address,
-                                          // TODO: Cloud 스토리지 연동 후 활성화
-                                          // String aiImage, List<String> realImages, 
+                                          // TODO: AI 이미지 생성 로직 구현 후 활성화
+                                          // String aiImage, 
+                                          List<String> realImages,
                                           Long authorId, String authorName,
                                           LocalDateTime createdAt, String timeAgo) {
         return PostLostDetailResponse.builder()
@@ -87,9 +90,9 @@ public class PostLostDetailResponse {
                 .latitude(latitude)
                 // TODO: 주소 변환 API 연동 후 활성화
                 // .address(address)
-                // TODO: Cloud 스토리지 연동 후 활성화
+                // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // .aiImage(aiImage)
-                // .realImages(realImages)
+                .realImages(realImages)
                 .authorId(authorId)
                 .authorName(authorName)
                 .createdAt(createdAt)

@@ -10,7 +10,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDate;
@@ -117,7 +116,8 @@ public class PostLost extends BaseEntity {
         DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        this.realImage = request.getDogImages(); // 이미지 업데이트 로직은 실제 정책에 맞게 수정 필요
+        // TODO: 이미지 업데이트 로직은 별도 처리 필요 (MultipartFile -> String 변환)
+        // this.realImage = request.getDogImages();
         this.title = request.getTitle();
         this.dogName = request.getDogName();
         this.dogType = dogType;
@@ -129,4 +129,7 @@ public class PostLost extends BaseEntity {
         this.lostSpot = lostSpot;
     }
 
+    public void updateImages(List<String> imageKeyNames) {
+        this.realImage = imageKeyNames;
+    }
 }

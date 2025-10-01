@@ -116,7 +116,8 @@ public class PostFound extends BaseEntity {
         DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        this.realImage = request.getDogImages();
+        // TODO: 이미지 업데이트 로직은 별도 처리 필요 (MultipartFile -> String 변환)
+        // this.realImage = request.getDogImages();
         this.title = request.getTitle();
         this.dogType = dogType;
         this.dogColor = request.getDogColor();
@@ -125,6 +126,10 @@ public class PostFound extends BaseEntity {
         this.foundDate = request.getFoundDate();
         this.foundTime = request.getFoundTime();
         this.foundSpot = foundSpot;
+    }
+
+    public void updateImages(List<String> imageKeyNames) {
+        this.realImage = imageKeyNames;
     }
 }
 

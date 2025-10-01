@@ -8,6 +8,7 @@ import Myaong.Gangajikimi.common.util.TimeUtil;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
 import Myaong.Gangajikimi.postfound.repository.PostFoundRepository;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
+import Myaong.Gangajikimi.s3file.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PostFoundQueryService {
 
     private final PostFoundRepository postFoundRepository;
+    private final S3Service s3Service;
 
     public PostFound findPostFoundById(Long postId) {
 
@@ -36,6 +38,18 @@ public class PostFoundQueryService {
         PostFound postFound = postFoundRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.POST_NOT_FOUND));
 
+        // 이미지 Presigned URL 생성 (실제 이미지만)
+        List<String> realImageUrls = null;
+        if (postFound.getRealImage() != null && !postFound.getRealImage().isEmpty()) {
+            realImageUrls = s3Service.generatePresignedUrls(postFound.getRealImage());
+        }
+
+        // TODO: AI 이미지 생성 로직 구현 후 활성화
+        // String aiImageUrl = null;
+        // if (postFound.getAiImage() != null && !postFound.getAiImage().isEmpty()) {
+        //     aiImageUrl = s3Service.generatePresignedUrl(postFound.getAiImage());
+        // }
+
         return PostFoundDetailResponse.of(
                 postFound.getId(),
                 postFound.getTitle(),
@@ -49,9 +63,9 @@ public class PostFoundQueryService {
                 postFound.getFoundSpot().getY(), // latitude
                 // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
                 // getAddressFromCoordinates(postFound.getFoundSpot().getX(), postFound.getFoundSpot().getY()),
-                // TODO: Cloud 스토리지 연동 후 활성화
-                // postFound.getAiImage(),
-                // postFound.getRealImage(),
+                // TODO: AI 이미지 생성 로직 구현 후 활성화
+                // aiImageUrl,
+                realImageUrls,
                 postFound.getMember().getId(), // authorId
                 postFound.getMember().getMemberName(),
                 postFound.getCreatedAt(),
