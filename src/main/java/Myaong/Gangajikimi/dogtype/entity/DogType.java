@@ -1,4 +1,4 @@
-package Myaong.Gangajikimi.dogtype;
+package Myaong.Gangajikimi.dogtype.entity;
 
 import Myaong.Gangajikimi.common.BaseEntity;
 import jakarta.persistence.Column;
