@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postfound.web.controller;
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.dto.PageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
@@ -9,6 +10,7 @@ import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
+import Myaong.Gangajikimi.postfound.service.PostFoundQueryService;
 
 import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postfoundreport.service.PostFoundReportService;
@@ -25,6 +27,7 @@ public class PostFoundController implements PostFoundControllerDocs {
 
     private final PostFoundFacade postFoundFacade;
     private final PostFoundReportService postFoundReportService;
+    private final PostFoundQueryService postFoundQueryService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse> postFound(@Valid @RequestBody PostFoundRequest request,
@@ -55,6 +58,27 @@ public class PostFoundController implements PostFoundControllerDocs {
         postFoundFacade.deletePostFound(memberId, postFoundId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<GlobalResponse> getFoundPosts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        
+        PageResponse response = postFoundQueryService.getFoundPosts(page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @GetMapping("/my-posts")
+    public ResponseEntity<GlobalResponse> getMyFoundPosts(
+            @RequestParam Long memberId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        
+        PageResponse response = postFoundQueryService.getMyFoundPosts(memberId, page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 
     @GetMapping("/{postFoundId}")
