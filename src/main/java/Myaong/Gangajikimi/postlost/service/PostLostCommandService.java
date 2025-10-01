@@ -1,7 +1,8 @@
 package Myaong.Gangajikimi.postlost.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
+import Myaong.Gangajikimi.dogtype.service.DogTypeService;
 import Myaong.Gangajikimi.common.enums.Role;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
@@ -26,12 +27,13 @@ import java.util.List;
 public class PostLostCommandService {
 
     private final PostLostRepository postLostRepository;
+    private final DogTypeService dogTypeService;
     private final S3Service s3Service;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public PostLost postPostLost(PostLostRequest request, Member member){
 
-        DogType dogType = DogType.valueOf(request.getDogType());
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
@@ -96,7 +98,8 @@ public class PostLostCommandService {
         }
 
         // 게시글 정보 업데이트 (이미지 제외)
-        postLost.update(request, point);
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
+        postLost.update(request, point, dogType);
         
         // 새 이미지 keyName으로 업데이트
         postLost.updateImages(newImageKeyNames);

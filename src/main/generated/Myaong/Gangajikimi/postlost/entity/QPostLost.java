@@ -37,7 +37,7 @@ public class QPostLost extends EntityPathBase<PostLost> {
 
     public final StringPath dogName = createString("dogName");
 
-    public final EnumPath<Myaong.Gangajikimi.common.enums.DogType> dogType = createEnum("dogType", Myaong.Gangajikimi.common.enums.DogType.class);
+    public final Myaong.Gangajikimi.dogtype.entity.QDogType dogType;
 
     //inherited
     public final NumberPath<Long> id = _super.id;
@@ -75,6 +75,7 @@ public class QPostLost extends EntityPathBase<PostLost> {
 
     public QPostLost(Class<? extends PostLost> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.dogType = inits.isInitialized("dogType") ? new Myaong.Gangajikimi.dogtype.entity.QDogType(forProperty("dogType")) : null;
         this.member = inits.isInitialized("member") ? new Myaong.Gangajikimi.member.entity.QMember(forProperty("member")) : null;
     }
 

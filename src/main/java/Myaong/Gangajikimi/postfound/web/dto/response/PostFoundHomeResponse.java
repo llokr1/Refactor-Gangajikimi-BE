@@ -47,7 +47,7 @@ public class PostFoundHomeResponse {
         return PostFoundHomeResponse.builder()
             .id(postFound.getId())
             .title(postFound.getTitle())
-            .dogType(postFound.getDogType().name())
+            .dogType(postFound.getDogType().getType())
             .dogColor(postFound.getDogColor())
             .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
             .foundDateTime(postFound.getFoundTime())

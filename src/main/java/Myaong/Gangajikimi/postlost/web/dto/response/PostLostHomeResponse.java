@@ -47,7 +47,7 @@ public class PostLostHomeResponse {
         return PostLostHomeResponse.builder()
             .id(postLost.getId())
             .title(postLost.getTitle())
-            .dogType(postLost.getDogType().name())
+            .dogType(postLost.getDogType().getType())
             .dogColor(postLost.getDogColor())
             .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
             .lostDateTime(postLost.getLostTime())

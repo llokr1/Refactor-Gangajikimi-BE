@@ -19,7 +19,7 @@ public class PostFoundRequest {
     String title; // 제목
 
     @NotNull
-    String dogType; // 강아지 종류
+    String dogType; // 견종 이름
 
     @NotNull
     String dogColor; // 강아지 색깔
