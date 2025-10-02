@@ -30,11 +30,18 @@ public class S3Service {
 	private String bucketName;
 
 	private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp", "gif", "svg");
+	private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     public String upload(MultipartFile image, String keyPrefix, String fileName) {
         if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
             throw new GeneralException(ErrorCode.EMPTY_FILE_EXCEPTION);
         }
+        
+        // 파일 크기 체크
+        if (image.getSize() > MAX_FILE_SIZE) {
+            throw new GeneralException(ErrorCode.FILE_SIZE_EXCEEDED);
+        }
+        
         return this.uploadImage(image, keyPrefix, fileName);
     }
 

@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postlost.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.dogtype.service.DogTypeService;
 import Myaong.Gangajikimi.common.enums.Role;
@@ -114,6 +115,22 @@ public class PostLostCommandService {
         }
 
         postLostRepository.delete(postLost);
+    }
+
+    /**
+     * PostLost의 DogStatus만 업데이트
+     */
+    public PostLost updatePostLostStatus(PostLost postLost, Member member, DogStatus dogStatus) {
+        
+        // TODO: 권한 확인 - 본인만 상태 변경 가능
+        // if (!member.equals(postLost.getMember())) {
+        //     throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
+        // }
+
+        // 상태 업데이트
+        postLost.updateStatus(dogStatus);
+        
+        return postLost;
     }
 
 

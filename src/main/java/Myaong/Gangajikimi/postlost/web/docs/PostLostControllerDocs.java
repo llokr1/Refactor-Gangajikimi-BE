@@ -25,12 +25,12 @@ public interface PostLostControllerDocs {
             {
               "title": "강아지를 잃어버렸습니다",
               "dogName": "멍멍이",
-              "dogType": "골든리트리버",
+              "dogType": "골든 리트리버",
               "dogColor": "갈색",
               "dogGender": "FEMALE",
               "features": "귀여운 목걸이",
-              "lostDate": "2024-01-01",
-              "lostTime": "2024-01-01T14:30:00",
+              "lostDate": [2024, 1, 1],
+              "lostTime": [2024, 1, 1, 14, 30, 0, 0],
               "lostLongitude": 127.0276,
               "lostLatitude": 37.4979
             }
@@ -54,11 +54,12 @@ public interface PostLostControllerDocs {
                                 "postId": 1,
                                 "memberName": "홍길동",
                                 "postTitle": "강아지를 잃어버렸습니다",
-                                "postDate": "2024-01-01T12:00:00"
+                                "postDate": [2024, 1, 1, 12, 0, 0, 0],
+                                "dogStatus": "MISSING"
                             }
                         }
                         """,
-                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(제목), postDate(작성일시)"
+                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(제목), postDate(작성일시), dogStatus(강아지 상태: MISSING/SIGHTED/RETURNED)"
                 )
             )
         )
@@ -79,12 +80,12 @@ public interface PostLostControllerDocs {
             {
               "title": "강아지를 잃어버렸습니다",
               "dogName": "멍멍이",
-              "dogType": "골든리트리버",
+              "dogType": "골든 리트리버",
               "dogColor": "갈색",
               "dogGender": "FEMALE",
               "features": "귀여운 목걸이",
-              "lostDate": "2024-01-01",
-              "lostTime": "2024-01-01T14:30:00",
+              "lostDate": [2024, 1, 1],
+              "lostTime": [2024, 1, 1, 14, 30, 0, 0],
               "lostLongitude": 127.0276,
               "lostLatitude": 37.4979
             }
@@ -108,11 +109,12 @@ public interface PostLostControllerDocs {
                                 "postId": 1,
                                 "memberName": "홍길동",
                                 "postTitle": "수정된 제목",
-                                "postDate": "2024-01-01T13:00:00"
+                                "postDate": [2024, 1, 1, 13, 0, 0, 0],
+                                "dogStatus": "MISSING"
                             }
                         }
                         """,
-                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(수정된 제목), postDate(수정일시)"
+                    description = "result: PostLostPostResponse 객체 - postId(게시글 ID), memberName(작성자명), postTitle(수정된 제목), postDate(수정일시), dogStatus(강아지 상태: MISSING/SIGHTED/RETURNED)"
                 )
             )
         )
@@ -178,19 +180,24 @@ public interface PostLostControllerDocs {
                                 "dogType": "MALTESE",
                                 "dogColor": "흰색",
                                 "dogGender": "MALE",
+                                "dogStatus": "MISSING",
                                 "content": "어제 공원에서 강아지를 잃어버렸습니다...",
-                                "lostDate": "2024-01-01",
-                                "lostTime": "2024-01-01T14:30:00",
+                                "lostDate": [2024, 1, 1],
+                                "lostTime": [2024, 1, 1, 14, 30, 0, 0],
                                 "longitude": 127.0276,
                                 "latitude": 37.4979,
+                                "realImages": [
+                                    "https://s3.amazonaws.com/bucket/presigned-url-example1",
+                                    "https://s3.amazonaws.com/bucket/presigned-url-example2"
+                                ],
                                 "authorId": 1,
                                 "authorName": "홍길동",
-                                "createdAt": "2024-01-01T12:00:00",
+                                "createdAt": [2024, 1, 1, 12, 0, 0, 0],
                                 "timeAgo": "2시간 전"
                             }
                         }
                         """,
-                    description = "result: PostLostDetailResponse 객체 - postId(게시글 ID), title(제목), dogName(강아지 이름), dogType(견종), dogColor(색상), dogGender(성별), content(내용), lostDate(분실 날짜), lostTime(분실 시간), longitude(경도), latitude(위도), authorId(작성자 ID), authorName(작성자명), createdAt(작성일시), timeAgo(상대시간)"
+                    description = "result: PostLostDetailResponse 객체 - postId(게시글 ID), title(제목), dogName(강아지 이름), dogType(견종), dogColor(색상), dogGender(성별), dogStatus(강아지 상태: MISSING/SIGHTED/RETURNED), content(내용), lostDate(분실 날짜), lostTime(분실 시간), longitude(경도), latitude(위도), realImages(실제 이미지 Presigned URL 목록), authorId(작성자 ID), authorName(작성자명), createdAt(작성일시), timeAgo(상대시간)"
                 )
             )
         )
@@ -249,28 +256,26 @@ public interface PostLostControllerDocs {
                             "code": "COMMON200",
                             "message": "SUCCESS!",
                             "result": {
-                                "posts": [
+                                "content": [
                                     {
                                         "id": 1,
                                         "title": "강아지를 잃어버렸습니다",
-                                        "dogType": "MALTESE",
+                                        "dogType": "말티즈",
                                         "dogColor": "흰색",
                                         "location": "TODO: 행정동/구 단위 위치 정보",
-                                        "lostDateTime": "2024-01-01T14:30:00",
-                                        "image": "https://example.com/image1.jpg",
-                                        "type": "LOST",
-                                        "status": "상태"
+                                        "lostDateTime": [2024, 1, 1, 14, 30, 0, 0],
+                                        "image": "https://s3.amazonaws.com/bucket/presigned-url-example",
+                                        "status": "MISSING"
                                     },
                                     {
                                         "id": 2,
-                                        "title": "고양이를 잃어버렸습니다",
-                                        "dogType": "PERSIAN",
-                                        "dogColor": "회색",
+                                        "title": "골든 리트리버를 잃어버렸습니다",
+                                        "dogType": "골든 리트리버",
+                                        "dogColor": "갈색",
                                         "location": "TODO: 행정동/구 단위 위치 정보",
-                                        "lostDateTime": "2024-01-01T13:00:00",
-                                        "image": "https://example.com/image2.jpg",
-                                        "type": "LOST",
-                                        "status": "상태"
+                                        "lostDateTime": [2024, 1, 1, 13, 0, 0, 0],
+                                        "image": "https://s3.amazonaws.com/bucket/presigned-url-example2",
+                                        "status": "SIGHTED"
                                     }
                                 ],
                                 "hasNext": true
@@ -318,7 +323,7 @@ public interface PostLostControllerDocs {
                                         "dogType": "MALTESE",
                                         "dogColor": "흰색",
                                         "location": "TODO: 행정동/구 단위 위치 정보",
-                                        "lostDateTime": "2024-01-01T14:30:00",
+                                        "lostDateTime": [2024, 1, 1, 14, 30, 0, 0],
                                         "image": "https://example.com/image1.jpg",
                                         "type": "LOST",
                                         "status": "상태"
@@ -343,5 +348,88 @@ public interface PostLostControllerDocs {
             description = "페이지 크기",
             example = "20"
         ) Integer size
+    );
+
+    @Operation(
+        summary = "분실물 게시글 강아지 상태 업데이트",
+        description = """
+            분실물 게시글의 강아지 상태만 업데이트합니다.
+            
+            **요청 예시:**
+            ```json
+            {
+              "dogStatus": "RETURNED"
+            }
+            ```
+            
+            **가능한 상태값:**
+            - MISSING: 실종
+            - SIGHTED: 목격  
+            - RETURNED: 귀가완료
+            """
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "강아지 상태 업데이트 성공",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = GlobalResponse.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": true,
+                            "code": "COMMON200",
+                            "message": "SUCCESS!",
+                            "result": {
+                                "postId": 1,
+                                "dogStatus": "RETURNED",
+                                "updatedAt": [2024, 1, 1, 15, 30, 0, 0]
+                            }
+                        }
+                        """,
+                    description = "result: DogStatusUpdateResponse 객체 - postId(게시글 ID), dogStatus(업데이트된 강아지 상태), updatedAt(업데이트 시간)"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패 (토큰이 없거나 유효하지 않음)",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "UNAUTHORIZED",
+                            "message": "인증이 필요합니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "게시글을 찾을 수 없음",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "POST_NOT_FOUND",
+                            "message": "게시글을 찾을 수 없습니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<GlobalResponse> updatePostLostStatus(
+        @PathVariable Long postLostId,
+        @RequestBody Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest request,
+        @AuthenticationPrincipal CustomUserDetails userDetails
     );
 }

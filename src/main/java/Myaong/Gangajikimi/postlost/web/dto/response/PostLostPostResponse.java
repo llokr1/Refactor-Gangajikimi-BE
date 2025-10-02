@@ -1,5 +1,6 @@
 package Myaong.Gangajikimi.postlost.web.dto.response;
 
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,21 +14,24 @@ public class PostLostPostResponse {
     String memberName;
     String postTitle;
     LocalDateTime postDate;
+    DogStatus dogStatus;
 
     @Builder
-    private PostLostPostResponse(Long postId, String memberName, String postTitle, LocalDateTime postDate) {
+    private PostLostPostResponse(Long postId, String memberName, String postTitle, LocalDateTime postDate, DogStatus dogStatus) {
         this.postId = postId;
         this.memberName = memberName;
         this.postTitle = postTitle;
         this.postDate = postDate;
+        this.dogStatus = dogStatus;
     }
 
-    public static PostLostPostResponse of(Long postId, String memberName, String postTitle, LocalDateTime postDate) {
+    public static PostLostPostResponse of(Long postId, String memberName, String postTitle, LocalDateTime postDate, DogStatus dogStatus) {
         return PostLostPostResponse.builder()
                 .postId(postId)
                 .memberName(memberName)
                 .postTitle(postTitle)
                 .postDate(postDate)
+                .dogStatus(dogStatus)
                 .build();
     }
 
@@ -37,6 +41,7 @@ public class PostLostPostResponse {
                 .memberName(postLost.getMember().getMemberName())
                 .postTitle(postLost.getTitle())
                 .postDate(postLost.getCreatedAt())
+                .dogStatus(postLost.getStatus())
                 .build();
     }
 }

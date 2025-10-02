@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postfound.entity;
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
@@ -41,6 +42,10 @@ public class PostFound extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DogGender dogGender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DogStatus status; // 강아지 상태 (실종, 목격, 귀가완료)
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
@@ -80,6 +85,7 @@ public class PostFound extends BaseEntity {
         this.dogType = dogType;
         this.dogGender = dogGender;
         this.dogColor = dogColor;
+        this.status = DogStatus.MISSING; // 게시글 작성 시 기본값: 실종
         this.content = content;
         this.foundSpot = foundSpot;
         this.foundDate = foundDate;
@@ -115,8 +121,7 @@ public class PostFound extends BaseEntity {
 
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        // TODO: 이미지 업데이트 로직은 별도 처리 필요 (MultipartFile -> String 변환)
-        // this.realImage = request.getDogImages();
+        // 이미지 업데이트는 updateImages() 메서드로 별도 처리
         this.title = request.getTitle();
         this.dogType = dogType;
         this.dogColor = request.getDogColor();
@@ -129,6 +134,13 @@ public class PostFound extends BaseEntity {
 
     public void updateImages(List<String> imageKeyNames) {
         this.realImage = imageKeyNames;
+    }
+
+    /**
+     * 강아지 상태 변경
+     */
+    public void updateStatus(DogStatus status) {
+        this.status = status;
     }
 }
 

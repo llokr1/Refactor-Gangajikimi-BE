@@ -52,6 +52,8 @@ public class QPostLost extends EntityPathBase<PostLost> {
 
     public final ListPath<String, StringPath> realImage = this.<String, StringPath>createList("realImage", String.class, StringPath.class, PathInits.DIRECT2);
 
+    public final EnumPath<Myaong.Gangajikimi.common.enums.DogStatus> status = createEnum("status", Myaong.Gangajikimi.common.enums.DogStatus.class);
+
     public final StringPath title = createString("title");
 
     //inherited

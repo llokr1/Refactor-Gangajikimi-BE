@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postfound.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.dogtype.service.DogTypeService;
 import Myaong.Gangajikimi.common.enums.Role;
@@ -114,6 +115,22 @@ public class PostFoundCommandService {
             throw new GeneralException(ErrorCode.POST_NOT_FOUND);
         }
         postFoundRepository.delete(postFound);
+    }
+
+    /**
+     * PostFound의 DogStatus만 업데이트
+     */
+    public PostFound updatePostFoundStatus(PostFound postFound, Member member, DogStatus dogStatus) {
+        
+        // TODO: 권한 확인 - 본인만 상태 변경 가능
+        // if (!member.equals(postFound.getMember())) {
+        //     throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
+        // }
+
+        // 상태 업데이트
+        postFound.updateStatus(dogStatus);
+        
+        return postFound;
     }
 
 }

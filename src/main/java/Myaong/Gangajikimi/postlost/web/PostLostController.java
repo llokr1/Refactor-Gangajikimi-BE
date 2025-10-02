@@ -2,6 +2,7 @@ package Myaong.Gangajikimi.postlost.web;
 
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
 import Myaong.Gangajikimi.common.dto.PageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
@@ -110,6 +111,18 @@ public class PostLostController implements PostLostControllerDocs {
         Long memberId = userDetails.getId();
         var response = postLostReportService.reportPostLost(postLostId, request, memberId);
         
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @PatchMapping("/{postLostId}/status")
+    public ResponseEntity<GlobalResponse> updatePostLostStatus(
+            @PathVariable Long postLostId,
+            @RequestBody DogStatusUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long memberId = userDetails.getId();
+        var response = postLostFacade.updatePostLostStatus(postLostId, request, memberId);
+
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 

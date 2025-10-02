@@ -1,5 +1,7 @@
 package Myaong.Gangajikimi.facade;
 
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateResponse;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.member.service.MemberService;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
@@ -40,7 +42,7 @@ public class PostFoundFacade {
         // 임시 좌표 저장
         tempLocationService.saveTempLocation(request.getFoundLongitude(), request.getFoundLatitude(), postFound);
 
-        return PostFoundResponse.of(postFound.getId(), member.getMemberName(), postFound.getTitle(), postFound.getCreatedAt());
+        return PostFoundResponse.of(postFound.getId(), member.getMemberName(), postFound.getTitle(), postFound.getCreatedAt(), postFound.getStatus());
     }
 
     @Transactional
@@ -72,6 +74,25 @@ public class PostFoundFacade {
     public PostFoundDetailResponse getPostFoundDetail(Long postFoundId) {
 
         return postFoundQueryService.getPostFoundDetail(postFoundId);
+    }
+
+    @Transactional
+    public DogStatusUpdateResponse updatePostFoundStatus(Long postFoundId, DogStatusUpdateRequest request, Long memberId) {
+        
+        // Member 조회
+        Member member = memberService.findMemberById(memberId);
+        
+        // 게시글 조회
+        PostFound postFound = postFoundQueryService.findPostFoundById(postFoundId);
+        
+        // 상태 업데이트
+        PostFound updatedPostFound = postFoundCommandService.updatePostFoundStatus(postFound, member, request.getDogStatus());
+        
+        return DogStatusUpdateResponse.of(
+            updatedPostFound.getId(), 
+            updatedPostFound.getStatus(), 
+            updatedPostFound.getUpdatedAt()
+        );
     }
 
 }

@@ -54,9 +54,10 @@ public class PostLostQueryService {
                 postLost.getId(),
                 postLost.getTitle(),
                 postLost.getDogName(),
-                postLost.getDogType(),
+                postLost.getDogType() != null ? postLost.getDogType().getType() : "알 수 없음",
                 postLost.getDogColor(),
                 postLost.getDogGender(),
+                postLost.getStatus(),
                 postLost.getContent(),
                 postLost.getLostDate(),
                 postLost.getLostTime(),
@@ -84,8 +85,15 @@ public class PostLostQueryService {
         // TODO: 필터링 기능 구현 예정
         
         List<PostLostHomeResponse> lostResponses = lostPosts.getContent().stream()
-        // PostLost를 PostLostHomeResponse로 변환
-            .map(PostLostHomeResponse::from)
+        // PostLost를 PostLostHomeResponse로 변환 (PresignedUrl 포함)
+            .map(postLost -> {
+                // 첫 번째 이미지의 PresignedUrl 생성
+                String presignedImageUrl = null;
+                if (postLost.getRealImage() != null && !postLost.getRealImage().isEmpty()) {
+                    presignedImageUrl = s3Service.generatePresignedUrl(postLost.getRealImage().get(0));
+                }
+                return PostLostHomeResponse.of(postLost, presignedImageUrl);
+            })
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용
@@ -101,9 +109,16 @@ public class PostLostQueryService {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<PostLost> lostPosts = postLostRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
         
-        // PostLost를 PostLostHomeResponse로 변환
+        // PostLost를 PostLostHomeResponse로 변환 (PresignedUrl 포함)
         var lostResponses = lostPosts.getContent().stream()
-            .map(PostLostHomeResponse::from)
+            .map(postLost -> {
+                // 첫 번째 이미지의 PresignedUrl 생성
+                String presignedImageUrl = null;
+                if (postLost.getRealImage() != null && !postLost.getRealImage().isEmpty()) {
+                    presignedImageUrl = s3Service.generatePresignedUrl(postLost.getRealImage().get(0));
+                }
+                return PostLostHomeResponse.of(postLost, presignedImageUrl);
+            })
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용

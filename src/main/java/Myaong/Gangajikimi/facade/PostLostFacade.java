@@ -1,5 +1,7 @@
 package Myaong.Gangajikimi.facade;
 
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateResponse;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.member.service.MemberService;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
@@ -36,7 +38,7 @@ public class PostLostFacade {
 
         // DB 저장
 
-        return PostLostPostResponse.of(postLost.getId(), member.getMemberName(), postLost.getTitle(), postLost.getCreatedAt());
+        return PostLostPostResponse.of(postLost.getId(), member.getMemberName(), postLost.getTitle(), postLost.getCreatedAt(), postLost.getStatus());
     }
 
     @Transactional
@@ -64,6 +66,25 @@ public class PostLostFacade {
 
     public PostLostDetailResponse getPostLostDetail(Long postLostId) {
         return postLostQueryService.getPostLostDetail(postLostId);
+    }
+
+    @Transactional
+    public DogStatusUpdateResponse updatePostLostStatus(Long postLostId, DogStatusUpdateRequest request, Long memberId) {
+        
+        // Member 조회
+        Member member = memberService.findMemberById(memberId);
+        
+        // 게시글 조회
+        PostLost postLost = postLostQueryService.findPostLostById(postLostId);
+        
+        // 상태 업데이트
+        PostLost updatedPostLost = postLostCommandService.updatePostLostStatus(postLost, member, request.getDogStatus());
+        
+        return DogStatusUpdateResponse.of(
+            updatedPostLost.getId(), 
+            updatedPostLost.getStatus(), 
+            updatedPostLost.getUpdatedAt()
+        );
     }
 
 }

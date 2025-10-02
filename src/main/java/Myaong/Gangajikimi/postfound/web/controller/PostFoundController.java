@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postfound.web.controller;
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
 import Myaong.Gangajikimi.common.dto.PageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
@@ -83,10 +84,11 @@ public class PostFoundController implements PostFoundControllerDocs {
 
     @GetMapping("/my-posts")
     public ResponseEntity<GlobalResponse> getMyFoundPosts(
-            @RequestParam Long memberId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
         
+        Long memberId = userDetails.getId();
         PageResponse response = postFoundQueryService.getMyFoundPosts(memberId, page, size);
         
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
@@ -107,6 +109,18 @@ public class PostFoundController implements PostFoundControllerDocs {
 
         Long memberId = userDetails.getId();
         PostFoundReportResponse response = postFoundReportService.reportPostFound(postFoundId, request, memberId);
+
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @PatchMapping("/{postFoundId}/status")
+    public ResponseEntity<GlobalResponse> updatePostFoundStatus(
+            @PathVariable Long postFoundId,
+            @RequestBody DogStatusUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long memberId = userDetails.getId();
+        var response = postFoundFacade.updatePostFoundStatus(postFoundId, request, memberId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }

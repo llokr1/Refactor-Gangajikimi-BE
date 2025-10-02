@@ -50,6 +50,8 @@ public class QPostFound extends EntityPathBase<PostFound> {
 
     public final ListPath<String, StringPath> realImage = this.<String, StringPath>createList("realImage", String.class, StringPath.class, PathInits.DIRECT2);
 
+    public final EnumPath<Myaong.Gangajikimi.common.enums.DogStatus> status = createEnum("status", Myaong.Gangajikimi.common.enums.DogStatus.class);
+
     public final ListPath<Myaong.Gangajikimi.templocation.entity.TempLocation, Myaong.Gangajikimi.templocation.entity.QTempLocation> tempLocations = this.<Myaong.Gangajikimi.templocation.entity.TempLocation, Myaong.Gangajikimi.templocation.entity.QTempLocation>createList("tempLocations", Myaong.Gangajikimi.templocation.entity.TempLocation.class, Myaong.Gangajikimi.templocation.entity.QTempLocation.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
