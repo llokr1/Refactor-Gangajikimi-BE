@@ -31,7 +31,7 @@ public class PostFound extends BaseEntity {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dog_type_id", nullable = false)
+    @JoinColumn(name = "dog_type_id", nullable = true)
     private DogType dogType; // 견종
 
     @Column(nullable = false)

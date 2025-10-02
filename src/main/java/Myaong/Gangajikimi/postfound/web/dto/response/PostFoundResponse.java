@@ -36,6 +36,7 @@ public class PostFoundResponse {
                 .postId(postFound.getId())
                 .memberName(postFound.getMember().getMemberName())
                 .postTitle(postFound.getTitle())
+                .postDate(postFound.getCreatedAt())
                 .build();
     }
 

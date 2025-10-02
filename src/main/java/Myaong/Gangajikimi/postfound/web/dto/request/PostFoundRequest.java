@@ -1,19 +1,19 @@
 package Myaong.Gangajikimi.postfound.web.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostFoundRequest {
-
-    List<MultipartFile> dogImages; // 강아지 실제 사진들
 
     @NotNull
     String title; // 제목
