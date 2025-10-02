@@ -1,7 +1,9 @@
 package Myaong.Gangajikimi.postfound.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
+import Myaong.Gangajikimi.dogtype.service.DogTypeService;
 import Myaong.Gangajikimi.common.enums.Role;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
@@ -26,12 +28,13 @@ import java.util.List;
 public class PostFoundCommandService {
 
     private final PostFoundRepository postFoundRepository;
+    private final DogTypeService dogTypeService;
     private final S3Service s3Service;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-    public PostFound postPostFound(PostFoundRequest request, Member member){
+    public PostFound postPostFound(PostFoundRequest request, Member member, List<MultipartFile> images){
 
-        DogType dogType = DogType.valueOf(request.getDogType());
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
@@ -52,22 +55,20 @@ public class PostFoundCommandService {
 
         // 이미지 업로드 및 keyName 목록 생성
         List<String> imageKeyNames = new ArrayList<>();
-        if (request.getDogImages() != null && !request.getDogImages().isEmpty()) {
-            for (MultipartFile image : request.getDogImages()) {
-                if (image != null && !image.isEmpty()) {
-                    String keyName = s3Service.upload(image, "postFound", savedPostFound.getId().toString());
-                    imageKeyNames.add(keyName);
-                }
-            }
+        if (images != null && !images.isEmpty()) {
+            imageKeyNames = images.stream()
+                    .filter(image -> image != null && !image.isEmpty())
+                    .map(image -> s3Service.upload(image, "postFound", savedPostFound.getId().toString()))
+                    .toList();
         }
 
         // 업로드된 이미지 keyNames로 PostFound 업데이트
         savedPostFound.updateImages(imageKeyNames);
 
-        return postFoundRepository.save(savedPostFound);
+        return savedPostFound;
     }
 
-    public PostFound updatePostFound(PostFoundRequest request, Member member, PostFound postFound){
+    public PostFound updatePostFound(PostFoundRequest request, Member member, PostFound postFound, List<MultipartFile> images){
 
         // 권한 확인
         if(!member.equals(postFound.getMember())){
@@ -78,24 +79,21 @@ public class PostFoundCommandService {
 
         // 기존 이미지 삭제 (S3에서)
         if (postFound.getRealImage() != null && !postFound.getRealImage().isEmpty()) {
-            for (String oldKeyName : postFound.getRealImage()) {
-                s3Service.deleteFile(oldKeyName);
-            }
+            postFound.getRealImage().forEach(s3Service::deleteFile);
         }
 
         // 새 이미지 업로드
         List<String> newImageKeyNames = new ArrayList<>();
-        if (request.getDogImages() != null && !request.getDogImages().isEmpty()) {
-            for (MultipartFile image : request.getDogImages()) {
-                if (image != null && !image.isEmpty()) {
-                    String keyName = s3Service.upload(image, "postFound", postFound.getId().toString());
-                    newImageKeyNames.add(keyName);
-                }
-            }
+        if (images != null && !images.isEmpty()) {
+            newImageKeyNames = images.stream()
+                    .filter(image -> image != null && !image.isEmpty())
+                    .map(image -> s3Service.upload(image, "postFound", postFound.getId().toString()))
+                    .toList();
         }
 
         // 게시글 정보 업데이트 (이미지 제외)
-        postFound.update(request, point);
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
+        postFound.update(request, point, dogType);
         
         // 새 이미지 keyName으로 업데이트
         postFound.updateImages(newImageKeyNames);
@@ -117,6 +115,22 @@ public class PostFoundCommandService {
             throw new GeneralException(ErrorCode.POST_NOT_FOUND);
         }
         postFoundRepository.delete(postFound);
+    }
+
+    /**
+     * PostFound의 DogStatus만 업데이트
+     */
+    public PostFound updatePostFoundStatus(PostFound postFound, Member member, DogStatus dogStatus) {
+        
+        // TODO: 권한 확인 - 본인만 상태 변경 가능
+        // if (!member.equals(postFound.getMember())) {
+        //     throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
+        // }
+
+        // 상태 업데이트
+        postFound.updateStatus(dogStatus);
+        
+        return postFound;
     }
 
 }

@@ -41,13 +41,14 @@ public enum ErrorCode {
     ALREADY_REPORTED(HttpStatus.BAD_REQUEST, "POST404", "이미 신고한 게시글입니다."),
 
     //S3
-    EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "S3_400_1", "파일이 비어 있습니다."),
-    NO_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3_400_2", "파일에 확장자가 없습니다."),
-    INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3_400_3", "지원하지 않는 파일 확장자입니다. (jpg, jpeg, png, gif 만 허용)"),
-    IO_EXCEPTION_ON_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "S3_500_1", "이미지 업로드 중 IO 예외가 발생했습니다."),
-    IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "S3_500_2", "이미지 삭제 중 예외가 발생했습니다."),
-    PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3_500_3", "S3에 파일 업로드 중 예외가 발생했습니다."),
-    NO_BOOKMARKED(HttpStatus.BAD_REQUEST, "CATEGORY400", "해당 사용자가 즐겨찾기한 카테고리가 존재하지 않습니다.");
+    EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "S3401", "파일이 비어 있습니다."),
+    NO_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3402", "파일에 확장자가 없습니다."),
+    INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3403", "지원하지 않는 파일 확장자입니다. (jpg, jpeg, png, gif 만 허용)"),
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "S3404", "파일 크기가 제한을 초과했습니다. (최대 5MB)"),
+    IO_EXCEPTION_ON_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "S3501", "이미지 업로드 중 IO 예외가 발생했습니다."),
+    IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "S3502", "이미지 삭제 중 예외가 발생했습니다."),
+    PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3503", "S3에 파일 업로드 중 예외가 발생했습니다."),
+    NO_BOOKMARKED(HttpStatus.BAD_REQUEST, "CATEGORY400", "해당 사용자가 즐겨찾기한 카테고리가 존재하지 않습니다."),
 
     //DOGTYPE
     DOG_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOGTYPE404", "해당 견종을 찾을 수 없습니다.");

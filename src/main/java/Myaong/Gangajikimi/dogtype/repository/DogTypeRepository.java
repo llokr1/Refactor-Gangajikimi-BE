@@ -10,8 +10,6 @@ import java.util.Optional;
 @Repository
 public interface DogTypeRepository extends JpaRepository<DogType, Long> {
     
-    Optional<DogType> findById(Long id);
-    
     Optional<DogType> findByType(String type);
     
     List<DogType> findByTypeContainingIgnoreCase(String type);
