@@ -16,6 +16,7 @@ import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity

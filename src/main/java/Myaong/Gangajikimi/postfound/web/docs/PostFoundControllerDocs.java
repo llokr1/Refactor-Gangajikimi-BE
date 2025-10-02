@@ -113,6 +113,57 @@ public interface PostFoundControllerDocs {
                         """
                 )
             )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "잘못된 요청 (필수 필드 누락, 잘못된 데이터 형식 등)",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "VALIDATION_ERROR",
+                            "message": "입력값이 올바르지 않습니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패 (토큰이 없거나 유효하지 않음)",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "UNAUTHORIZED",
+                            "message": "인증이 필요합니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "견종을 찾을 수 없음",
+            content = @io.swagger.v3.oas.annotations.media.Content(
+                mediaType = "application/json",
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                        {
+                            "isSuccess": false,
+                            "code": "DOG_TYPE_NOT_FOUND",
+                            "message": "존재하지 않는 견종입니다",
+                            "result": null
+                        }
+                        """
+                )
+            )
         )
     })
     ResponseEntity<GlobalResponse> postFound(
