@@ -15,6 +15,7 @@ import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomCreateRequest;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomListResponse;
 import Myaong.Gangajikimi.chatroom.web.dto.ChatRoomResponse;
 import Myaong.Gangajikimi.chatroom.web.dto.delete.ChatRoomDeleteResponse;
+import Myaong.Gangajikimi.common.enums.PostType;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.member.entity.Member;
@@ -29,28 +30,31 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	private final ChatRoomConverter converter;
 	private final ChatMessageRepository chatMessageRepository;
 
-
 	@Override
 	@Transactional
-	// 채팅방 생성
 	public ChatRoomResponse createChatRoom(ChatRoomCreateRequest req, Long memberId) {
+		// 1) 참여자 조회
 		Member member1 = memberRepository.findById(memberId)
 			.orElseThrow(() -> new GeneralException(MEMBER_NOT_FOUND));
 		Member member2 = memberRepository.findById(req.getMemberId())
 			.orElseThrow(() -> new GeneralException(MEMBER_NOT_FOUND));
 
-		// 자기 자신과 채팅방 개설은 불가능
-		if (member1 == member2) {
+		// 2) 자기 자신과 채팅 불가 (ID 기준 비교)
+		if (member1.getId().equals(member2.getId())) {
 			throw new GeneralException(NOT_SAME_PEOPLE);
 		}
 
-		// 이미 채팅방이 존재하면 존재하던 채팅방 반환
-		return chatRoomRepository.findByMembers(member1, member2)
+		// 3) (회원쌍 + 게시글 컨텍스트) 기준으로 기존 방 조회
+		return chatRoomRepository
+			.findByMembersAndPost(member1, member2, req.getPostType(), req.getPostId())
 			.map(converter::toResponse)
 			.orElseGet(() -> {
+				// 4) 없으면 생성
 				ChatRoom newRoom = ChatRoom.builder()
 					.member1(member1)
 					.member2(member2)
+					.postType(req.getPostType()) // NOT NULL 전제
+					.postId(req.getPostId())     // NOT NULL 전제
 					.build();
 				return converter.toResponse(chatRoomRepository.save(newRoom));
 			});
