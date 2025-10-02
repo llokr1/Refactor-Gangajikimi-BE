@@ -1,7 +1,7 @@
 package Myaong.Gangajikimi.postfound.web.dto.response;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,9 +15,10 @@ public class PostFoundDetailResponse {
     private Long postId;
     private String title;
     private String dogName;
-    private DogType dogType;
+    private String dogType;
     private String dogColor;
     private DogGender dogGender;
+    private DogStatus dogStatus;
     private String content;
     private LocalDate foundDate;
     private LocalDateTime foundTime;
@@ -36,9 +37,10 @@ public class PostFoundDetailResponse {
     @Builder
     private PostFoundDetailResponse(Long postId,
                                     String title,
-                                    DogType dogType,
+                                    String dogType,
                                     String dogColor,
                                     DogGender dogGender,
+                                    DogStatus dogStatus,
                                     String content,
                                     LocalDate foundDate,
                                     LocalDateTime foundTime,
@@ -57,6 +59,7 @@ public class PostFoundDetailResponse {
         this.dogType = dogType;
         this.dogColor = dogColor;
         this.dogGender = dogGender;
+        this.dogStatus = dogStatus;
         this.content = content;
         this.foundDate = foundDate;
         this.foundTime = foundTime;
@@ -75,9 +78,10 @@ public class PostFoundDetailResponse {
 
     public static PostFoundDetailResponse of(Long postId,
                                              String title,
-                                             DogType dogType,
+                                             String dogType,
                                              String dogColor,
                                              DogGender dogGender,
+                                             DogStatus dogStatus,
                                              String content,
                                              LocalDate foundDate,
                                              LocalDateTime foundTime,
@@ -98,6 +102,7 @@ public class PostFoundDetailResponse {
                 .dogType(dogType)
                 .dogColor(dogColor)
                 .dogGender(dogGender)
+                .dogStatus(dogStatus)
                 .content(content)
                 .foundDate(foundDate)
                 .foundTime(foundTime)

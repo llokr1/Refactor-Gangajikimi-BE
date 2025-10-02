@@ -1,7 +1,9 @@
 package Myaong.Gangajikimi.postlost.service;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
+import Myaong.Gangajikimi.dogtype.service.DogTypeService;
 import Myaong.Gangajikimi.common.enums.Role;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
@@ -26,12 +28,13 @@ import java.util.List;
 public class PostLostCommandService {
 
     private final PostLostRepository postLostRepository;
+    private final DogTypeService dogTypeService;
     private final S3Service s3Service;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-    public PostLost postPostLost(PostLostRequest request, Member member){
+    public PostLost postPostLost(PostLostRequest request, Member member, List<MultipartFile> images){
 
-        DogType dogType = DogType.valueOf(request.getDogType());
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
@@ -51,24 +54,22 @@ public class PostLostCommandService {
 
         PostLost savedPostLost = postLostRepository.save(newPostLost);
 
-        // 이미지 업로드 및 keyName 목록 생성
+        // 이미지 업로드 및 keyName 목록 생성 (stream 사용)
         List<String> imageKeyNames = new ArrayList<>();
-        if (request.getDogImages() != null && !request.getDogImages().isEmpty()) {
-            for (MultipartFile image : request.getDogImages()) {
-                if (image != null && !image.isEmpty()) {
-                    String keyName = s3Service.upload(image, "postLost", savedPostLost.getId().toString());
-                    imageKeyNames.add(keyName);
-                }
-            }
+        if (images != null && !images.isEmpty()) {
+            imageKeyNames = images.stream()
+                    .filter(image -> image != null && !image.isEmpty())
+                    .map(image -> s3Service.upload(image, "postLost", savedPostLost.getId().toString()))
+                    .toList();
         }
 
         // 업로드된 이미지 keyNames로 PostLost 업데이트
         savedPostLost.updateImages(imageKeyNames);
 
-        return postLostRepository.save(savedPostLost);
+        return savedPostLost;
     }
 
-    public PostLost updatePostLost(PostLostRequest request, Member member, PostLost postLost){
+    public PostLost updatePostLost(PostLostRequest request, Member member, PostLost postLost, List<MultipartFile> images){
 
         // 권한 확인
         if(!member.equals(postLost.getMember())){
@@ -77,26 +78,21 @@ public class PostLostCommandService {
 
         Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
 
-        // 기존 이미지 삭제 (S3에서)
-        if (postLost.getRealImage() != null && !postLost.getRealImage().isEmpty()) {
-            for (String oldKeyName : postLost.getRealImage()) {
-                s3Service.deleteFile(oldKeyName);
-            }
-        }
+        // 기존 이미지 삭제 (S3에서) - stream 사용
+        postLost.getRealImage().forEach(s3Service::deleteFile);
 
-        // 새 이미지 업로드
+        // 새 이미지 업로드 (stream 사용)
         List<String> newImageKeyNames = new ArrayList<>();
-        if (request.getDogImages() != null && !request.getDogImages().isEmpty()) {
-            for (MultipartFile image : request.getDogImages()) {
-                if (image != null && !image.isEmpty()) {
-                    String keyName = s3Service.upload(image, "postLost", postLost.getId().toString());
-                    newImageKeyNames.add(keyName);
-                }
-            }
+        if (images != null && !images.isEmpty()) {
+            newImageKeyNames = images.stream()
+                    .filter(image -> image != null && !image.isEmpty())
+                    .map(image -> s3Service.upload(image, "postLost", postLost.getId().toString()))
+                    .toList();
         }
 
         // 게시글 정보 업데이트 (이미지 제외)
-        postLost.update(request, point);
+        DogType dogType = dogTypeService.findByTypeName(request.getDogType());
+        postLost.update(request, point, dogType);
         
         // 새 이미지 keyName으로 업데이트
         postLost.updateImages(newImageKeyNames);
@@ -119,6 +115,22 @@ public class PostLostCommandService {
         }
 
         postLostRepository.delete(postLost);
+    }
+
+    /**
+     * PostLost의 DogStatus만 업데이트
+     */
+    public PostLost updatePostLostStatus(PostLost postLost, Member member, DogStatus dogStatus) {
+        
+        // TODO: 권한 확인 - 본인만 상태 변경 가능
+        // if (!member.equals(postLost.getMember())) {
+        //     throw new GeneralException(ErrorCode.UNAUTHORIZED_UPDATING);
+        // }
+
+        // 상태 업데이트
+        postLost.updateStatus(dogStatus);
+        
+        return postLost;
     }
 
 

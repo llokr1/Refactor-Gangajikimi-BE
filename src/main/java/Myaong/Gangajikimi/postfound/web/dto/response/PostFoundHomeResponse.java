@@ -1,5 +1,6 @@
 package Myaong.Gangajikimi.postfound.web.dto.response;
 
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +25,12 @@ public class PostFoundHomeResponse {
     private String location; // 행정동/구 단위
     private LocalDateTime foundDateTime;
     private String image;
-    private String status; // TODO: 상태 필드 추가 예정
+    private DogStatus status; // 강아지 상태
     
     @Builder
     private PostFoundHomeResponse(Long id, String title, String dogType, String dogColor,
                                  String location, LocalDateTime foundDateTime,
-                                 String image, String status) {
+                                 String image, DogStatus status) {
         this.id = id;
         this.title = title;
         this.dogType = dogType;
@@ -41,19 +42,35 @@ public class PostFoundHomeResponse {
     }
 
     /**
-     * PostFound 엔티티를 PostFoundHomeResponse로 변환
+     * PostFound 엔티티를 PostFoundHomeResponse로 변환 (PresignedUrl 포함)
+     */
+    public static PostFoundHomeResponse of(PostFound postFound, String presignedImageUrl) {
+        return PostFoundHomeResponse.builder()
+            .id(postFound.getId())
+            .title(postFound.getTitle())
+            .dogType(postFound.getDogType() != null ? postFound.getDogType().getType() : "알 수 없음")
+            .dogColor(postFound.getDogColor())
+            .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
+            .foundDateTime(postFound.getFoundTime())
+            .image(presignedImageUrl) // PresignedUrl 사용
+            .status(postFound.getStatus())
+            .build();
+    }
+
+    /**
+     * PostFound 엔티티를 PostFoundHomeResponse로 변환 (기존 방식 - 호환성 유지)
      */
     public static PostFoundHomeResponse from(PostFound postFound) {
         return PostFoundHomeResponse.builder()
             .id(postFound.getId())
             .title(postFound.getTitle())
-            .dogType(postFound.getDogType().name())
+            .dogType(postFound.getDogType() != null ? postFound.getDogType().getType() : "알 수 없음")
             .dogColor(postFound.getDogColor())
             .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
             .foundDateTime(postFound.getFoundTime())
             .image(postFound.getRealImage() != null && !postFound.getRealImage().isEmpty() 
-                ? postFound.getRealImage().get(0) : null) // 첫 번째 이미지 사용
-            .status("상태") // TODO: 상태 필드 구현
+                ? postFound.getRealImage().get(0) : null) // S3 키 이름 그대로
+            .status(postFound.getStatus())
             .build();
     }
 }

@@ -1,7 +1,7 @@
 package Myaong.Gangajikimi.postlost.web.dto.response;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,9 +15,10 @@ public class PostLostDetailResponse {
     private Long postId;
     private String title;
     private String dogName;
-    private DogType dogType;
+    private String dogType;
     private String dogColor;
     private DogGender dogGender;
+    private DogStatus dogStatus;
     private String content;
     private LocalDate lostDate;
     private LocalDateTime lostTime;
@@ -34,8 +35,8 @@ public class PostLostDetailResponse {
     private String timeAgo;
 
     @Builder
-    private PostLostDetailResponse(Long postId, String title, String dogName, DogType dogType,
-                                  String dogColor, DogGender dogGender, String content,
+    private PostLostDetailResponse(Long postId, String title, String dogName, String dogType,
+                                  String dogColor, DogGender dogGender, DogStatus dogStatus, String content,
                                   LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
                                   // TODO: 주소 변환 API 연동 후 활성화
                                   // String address,
@@ -50,6 +51,7 @@ public class PostLostDetailResponse {
         this.dogType = dogType;
         this.dogColor = dogColor;
         this.dogGender = dogGender;
+        this.dogStatus = dogStatus;
         this.content = content;
         this.lostDate = lostDate;
         this.lostTime = lostTime;
@@ -66,8 +68,8 @@ public class PostLostDetailResponse {
         this.timeAgo = timeAgo;
     }
 
-    public static PostLostDetailResponse of(Long postId, String title, String dogName, DogType dogType,
-                                          String dogColor, DogGender dogGender, String content,
+    public static PostLostDetailResponse of(Long postId, String title, String dogName, String dogType,
+                                          String dogColor, DogGender dogGender, DogStatus dogStatus, String content,
                                           LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
                                           // TODO: 주소 변환 API 연동 후 활성화
                                           // String address,
@@ -83,6 +85,7 @@ public class PostLostDetailResponse {
                 .dogType(dogType)
                 .dogColor(dogColor)
                 .dogGender(dogGender)
+                .dogStatus(dogStatus)
                 .content(content)
                 .lostDate(lostDate)
                 .lostTime(lostTime)

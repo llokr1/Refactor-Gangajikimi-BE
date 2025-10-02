@@ -53,9 +53,10 @@ public class PostFoundQueryService {
         return PostFoundDetailResponse.of(
                 postFound.getId(),
                 postFound.getTitle(),
-                postFound.getDogType(),
+                postFound.getDogType() != null ? postFound.getDogType().getType() : "알 수 없음",
                 postFound.getDogColor(),
                 postFound.getDogGender(),
+                postFound.getStatus(),
                 postFound.getContent(),
                 postFound.getFoundDate(),
                 postFound.getFoundTime(),
@@ -77,14 +78,23 @@ public class PostFoundQueryService {
      * 발견했어요 게시글 목록 조회 (메인 페이지용)
      */
     public PageResponse getFoundPosts(int page, int size) {
-        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        // 프론트엔드에서 1부터 시작하는 페이지를 0부터 시작하도록 변환
+        int adjustedPage = Math.max(0, page - 1);
+        Pageable pageable = Pageable.ofSize(size).withPage(adjustedPage);
         Page<PostFound> foundPosts = postFoundRepository.findAllByOrderByCreatedAtDesc(pageable);
         
         // TODO: 필터링 기능 구현 예정
         
-        // PostFound를 PostFoundHomeResponse로 변환
+        // PostFound를 PostFoundHomeResponse로 변환 (PresignedUrl 포함)
         List<PostFoundHomeResponse> foundResponses = foundPosts.getContent().stream()
-            .map(PostFoundHomeResponse::from)
+            .map(postFound -> {
+                // 첫 번째 이미지의 PresignedUrl 생성
+                String presignedImageUrl = null;
+                if (postFound.getRealImage() != null && !postFound.getRealImage().isEmpty()) {
+                    presignedImageUrl = s3Service.generatePresignedUrl(postFound.getRealImage().get(0));
+                }
+                return PostFoundHomeResponse.of(postFound, presignedImageUrl);
+            })
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용
@@ -100,9 +110,16 @@ public class PostFoundQueryService {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<PostFound> foundPosts = postFoundRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
         
-        // PostFound를 PostFoundHomeResponse로 변환
+        // PostFound를 PostFoundHomeResponse로 변환 (PresignedUrl 포함)
         var foundResponses = foundPosts.getContent().stream()
-            .map(PostFoundHomeResponse::from)
+            .map(postFound -> {
+                // 첫 번째 이미지의 PresignedUrl 생성
+                String presignedImageUrl = null;
+                if (postFound.getRealImage() != null && !postFound.getRealImage().isEmpty()) {
+                    presignedImageUrl = s3Service.generatePresignedUrl(postFound.getRealImage().get(0));
+                }
+                return PostFoundHomeResponse.of(postFound, presignedImageUrl);
+            })
             .toList();
         
         // hasNext 계산: Spring Data JPA Page 객체의 hasNext() 메서드 사용
