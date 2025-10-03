@@ -1,7 +1,8 @@
 package Myaong.Gangajikimi.postfound.entity;
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.templocation.entity.TempLocation;
@@ -30,8 +31,8 @@ public class PostFound extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dog_type_id", nullable = true)
     private DogType dogType; // 견종
 
     @Column(nullable = false)
@@ -40,6 +41,10 @@ public class PostFound extends BaseEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private DogGender dogGender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DogStatus status; // 강아지 상태 (실종, 목격, 귀가완료)
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
@@ -80,6 +85,7 @@ public class PostFound extends BaseEntity {
         this.dogType = dogType;
         this.dogGender = dogGender;
         this.dogColor = dogColor;
+        this.status = DogStatus.SIGHTED; // 게시글 작성 시 기본값: 실종
         this.content = content;
         this.foundSpot = foundSpot;
         this.foundDate = foundDate;
@@ -111,12 +117,11 @@ public class PostFound extends BaseEntity {
                 .build();
     }
 
-    public void update(PostFoundRequest request, Point foundSpot) {
+    public void update(PostFoundRequest request, Point foundSpot, DogType dogType) {
 
-        DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        this.realImage = request.getDogImages();
+        // 이미지 업데이트는 updateImages() 메서드로 별도 처리
         this.title = request.getTitle();
         this.dogType = dogType;
         this.dogColor = request.getDogColor();
@@ -125,6 +130,17 @@ public class PostFound extends BaseEntity {
         this.foundDate = request.getFoundDate();
         this.foundTime = request.getFoundTime();
         this.foundSpot = foundSpot;
+    }
+
+    public void updateImages(List<String> imageKeyNames) {
+        this.realImage = imageKeyNames;
+    }
+
+    /**
+     * 강아지 상태 변경
+     */
+    public void updateStatus(DogStatus status) {
+        this.status = status;
     }
 }
 

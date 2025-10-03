@@ -1,0 +1,76 @@
+package Myaong.Gangajikimi.postfound.web.dto.response;
+
+import Myaong.Gangajikimi.common.enums.DogStatus;
+import Myaong.Gangajikimi.postfound.entity.PostFound;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * 목격했어요 게시글 홈 화면 응답 DTO
+ * 
+ * 홈 화면에서 목격했어요 게시글 목록을 표시하기 위한 응답 DTO입니다.
+ * 게시글의 기본 정보와 함께 목격 시간 정보를 포함합니다.
+ */
+@Getter
+@NoArgsConstructor
+public class PostFoundHomeResponse {
+    
+    private Long id;
+    private String title;
+    private String dogType;
+    private String dogColor;
+    private String location; // 행정동/구 단위
+    private LocalDateTime foundDateTime;
+    private String image;
+    private DogStatus status; // 강아지 상태
+    
+    @Builder
+    private PostFoundHomeResponse(Long id, String title, String dogType, String dogColor,
+                                 String location, LocalDateTime foundDateTime,
+                                 String image, DogStatus status) {
+        this.id = id;
+        this.title = title;
+        this.dogType = dogType;
+        this.dogColor = dogColor;
+        this.location = location;
+        this.foundDateTime = foundDateTime;
+        this.image = image;
+        this.status = status;
+    }
+
+    /**
+     * PostFound 엔티티를 PostFoundHomeResponse로 변환 (PresignedUrl 포함)
+     */
+    public static PostFoundHomeResponse of(PostFound postFound, String presignedImageUrl) {
+        return PostFoundHomeResponse.builder()
+            .id(postFound.getId())
+            .title(postFound.getTitle())
+            .dogType(postFound.getDogType() != null ? postFound.getDogType().getType() : "알 수 없음")
+            .dogColor(postFound.getDogColor())
+            .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
+            .foundDateTime(postFound.getFoundTime())
+            .image(presignedImageUrl) // PresignedUrl 사용
+            .status(postFound.getStatus())
+            .build();
+    }
+
+    /**
+     * PostFound 엔티티를 PostFoundHomeResponse로 변환 (기존 방식 - 호환성 유지)
+     */
+    public static PostFoundHomeResponse from(PostFound postFound) {
+        return PostFoundHomeResponse.builder()
+            .id(postFound.getId())
+            .title(postFound.getTitle())
+            .dogType(postFound.getDogType() != null ? postFound.getDogType().getType() : "알 수 없음")
+            .dogColor(postFound.getDogColor())
+            .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
+            .foundDateTime(postFound.getFoundTime())
+            .image(postFound.getRealImage() != null && !postFound.getRealImage().isEmpty() 
+                ? postFound.getRealImage().get(0) : null) // S3 키 이름 그대로
+            .status(postFound.getStatus())
+            .build();
+    }
+}

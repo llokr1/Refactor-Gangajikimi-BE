@@ -1,61 +1,153 @@
 package Myaong.Gangajikimi.s3file.service;
-import Myaong.Gangajikimi.s3file.dto.PresignedUrlResponse;
+import Myaong.Gangajikimi.common.exception.GeneralException;
+import Myaong.Gangajikimi.common.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class S3Service {
 
 	private final S3Presigner s3Presigner;
+    private final S3Client s3Client;
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
-	private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp");
+	private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp", "gif", "svg");
+	private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-	public PresignedUrlResponse generatePresignedUrl(String originalFileName, String contentType) {
-		// 파일 확장자 유효성 검사 (허용 확장자가 아니면 예외 발생)
-		validateExtension(originalFileName);
+    public String upload(MultipartFile image, String keyPrefix, String fileName) {
+        if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
+            throw new GeneralException(ErrorCode.EMPTY_FILE_EXCEPTION);
+        }
+        
+        // 파일 크기 체크 (사용자 업로드 파일 크기 로그 출력)
+        long fileSize = image.getSize();
+        if (fileSize > MAX_FILE_SIZE) {
+            log.error("파일 크기 초과: {}MB (제한: 5MB)", String.format("%.2f", fileSize / 1024.0 / 1024.0));
+            throw new GeneralException(ErrorCode.FILE_SIZE_EXCEEDED);
+        }
+        
+        return this.uploadImage(image, keyPrefix, fileName);
+    }
 
-		// 파일 확장자 추출 (예: png)
-		String ext = getExtension(originalFileName);
+    private String uploadImage(MultipartFile image, String keyPrefix, String fileName) {
+        this.validateExtension(image.getOriginalFilename());
+        try {
+            return this.uploadImageToS3(image, keyPrefix, fileName);
+        } catch (IOException e) {
+            throw new GeneralException(ErrorCode.IO_EXCEPTION_ON_IMAGE_UPLOAD);
+        }
+    }
 
-		// UUID 기반 고유 파일명 생성 (파일명 충돌 방지)
-		String uniqueFileName = UUID.randomUUID() + "." + ext;
+    private String uploadImageToS3(MultipartFile image, String keyPrefix, String fileName) throws IOException {
+        if (image == null || image.isEmpty()) {
+            throw new GeneralException(ErrorCode.EMPTY_FILE_EXCEPTION);
+        }
 
+        String originalFilename = image.getOriginalFilename();
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            throw new GeneralException(ErrorCode.NO_FILE_EXTENSION);
+        }
 
-		// S3에 업로드할 객체 요청 정의
-		PutObjectRequest objectRequest = PutObjectRequest.builder()
+        String extension = getExtension(originalFilename);
+        String s3FileName = UUID.randomUUID().toString().substring(0, 10) + "_" + fileName + "." + extension; // 유니크 파일명
+        String keyName = keyPrefix + "/" + s3FileName;
+
+        // AWS SDK v2 방식으로 변경
+        software.amazon.awssdk.core.sync.RequestBody requestBody = 
+            software.amazon.awssdk.core.sync.RequestBody.fromInputStream(
+                image.getInputStream(), image.getSize());
+
+        try {
+            System.out.println("Uploading image to S3: " + s3FileName);
+
+            // S3 업로드 실행
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyName)
+                    .contentType("image/" + extension)
+                    .build();
+
+            // 실제 S3 업로드 실행
+            s3Client.putObject(objectRequest, requestBody);
+            
+            System.out.println("S3 업로드 성공: " + s3FileName);
+        } catch (Exception e) {
+            System.err.println("S3 업로드 실패: " + e.getMessage());
+            e.printStackTrace();
+            throw new GeneralException(ErrorCode.PUT_OBJECT_EXCEPTION);
+        }
+
+        return keyName;
+    }
+
+	// 게시글 작성 시에는 Presigned URL을 사용하지 않고 서버에서 직접 업로드
+
+	/**
+	 * DB에 저장된 keyName으로부터 다운로드용 Presigned URL 생성
+	 * @param keyName DB에 저장된 S3 객체 키
+	 * @return 다운로드 가능한 Presigned URL
+	 */
+	public String generatePresignedUrl(String keyName) {
+		GetObjectRequest getObjectRequest = GetObjectRequest.builder()
 			.bucket(bucketName)
-			.key(uniqueFileName)
-			.contentType(contentType)
+			.key(keyName)
 			.build();
 
-		// Presigned URL 요청 정의 (10분 유효)
-		PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofMinutes(30))
-			.putObjectRequest(objectRequest)
+		GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+			.signatureDuration(Duration.ofMinutes(60)) // 1시간 유효
+			.getObjectRequest(getObjectRequest)
 			.build();
 
-		// Presigned URL 생성
-		URL presignedUrl = s3Presigner.presignPutObject(presignRequest).url();
+		URL presignedUrl = s3Presigner.presignGetObject(presignRequest).url();
+		return presignedUrl.toString();
+	}
 
-		// 최종 접근 가능한 S3 URL (DB 저장용)
-		String fileUrl = String.format("https://%s.s3.ap-northeast-2.amazonaws.com/%s",
-			bucketName, uniqueFileName);
+	/**
+	 * 여러 개의 keyName에 대해 다운로드용 Presigned URL 목록 생성
+	 * @param keyNames DB에 저장된 S3 객체 키 목록
+	 * @return 다운로드 가능한 Presigned URL 목록
+	 */
+	public List<String> generatePresignedUrls(List<String> keyNames) {
+		return keyNames.stream()
+			.map(this::generatePresignedUrl)
+			.toList();
+	}
 
-		// 응답 DTO 반환 (uploadUrl: S3 PUT 업로드 주소, fileUrl: 최종 접근 주소)
-		return new PresignedUrlResponse(presignedUrl.toString(), fileUrl);
+	/**
+	 * S3에서 파일 삭제
+	 * @param keyName 삭제할 파일의 keyName
+	 */
+	public void deleteFile(String keyName) {
+		try {
+			DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+				.bucket(bucketName)
+				.key(keyName)
+				.build();
+
+			s3Client.deleteObject(deleteObjectRequest);
+		} catch (Exception e) {
+			throw new GeneralException(ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
+		}
 	}
 
 	// 확장자 유효성 검사

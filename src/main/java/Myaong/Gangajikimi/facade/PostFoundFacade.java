@@ -1,5 +1,7 @@
 package Myaong.Gangajikimi.facade;
 
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateResponse;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.member.service.MemberService;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
@@ -13,6 +15,8 @@ import Myaong.Gangajikimi.templocation.service.TempLocationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +29,7 @@ public class PostFoundFacade {
     private final TempLocationService tempLocationService;
 
     @Transactional
-    public PostFoundResponse postPostFound(PostFoundRequest request, Long memberId){
+    public PostFoundResponse postPostFound(PostFoundRequest request, Long memberId, List<MultipartFile> images){
 
         // Member 생성
         Member member = memberService.findMemberById(memberId);
@@ -33,16 +37,16 @@ public class PostFoundFacade {
         // TODO: 생성된 AI 이미지 추가
 
         // 게시글 생성
-        PostFound postFound = postFoundCommandService.postPostFound(request, member);
+        PostFound postFound = postFoundCommandService.postPostFound(request, member, images);
 
         // 임시 좌표 저장
         tempLocationService.saveTempLocation(request.getFoundLongitude(), request.getFoundLatitude(), postFound);
 
-        return PostFoundResponse.of(postFound.getId(), member.getMemberName(), postFound.getTitle(), postFound.getCreatedAt());
+        return PostFoundResponse.of(postFound.getId(), member.getMemberName(), postFound.getTitle(), postFound.getCreatedAt(), postFound.getStatus());
     }
 
     @Transactional
-    public PostFoundResponse updatePostFound(PostFoundRequest request, Long memberId, Long postFoundId){
+    public PostFoundResponse updatePostFound(PostFoundRequest request, Long memberId, Long postFoundId, List<MultipartFile> images){
 
         // Member 조회
         Member member = memberService.findMemberById(memberId);
@@ -54,7 +58,7 @@ public class PostFoundFacade {
         tempLocationService.updateTempLocation(request.getFoundLongitude(), request.getFoundLatitude(), postFound);
 
         //업데이트 후 결과 반환
-        return PostFoundResponse.from(postFoundCommandService.updatePostFound(request, member, postFound));
+        return PostFoundResponse.from(postFoundCommandService.updatePostFound(request, member, postFound, images));
     }
 
     @Transactional
@@ -70,6 +74,25 @@ public class PostFoundFacade {
     public PostFoundDetailResponse getPostFoundDetail(Long postFoundId) {
 
         return postFoundQueryService.getPostFoundDetail(postFoundId);
+    }
+
+    @Transactional
+    public DogStatusUpdateResponse updatePostFoundStatus(Long postFoundId, DogStatusUpdateRequest request, Long memberId) {
+        
+        // Member 조회
+        Member member = memberService.findMemberById(memberId);
+        
+        // 게시글 조회
+        PostFound postFound = postFoundQueryService.findPostFoundById(postFoundId);
+        
+        // 상태 업데이트
+        PostFound updatedPostFound = postFoundCommandService.updatePostFoundStatus(postFound, member, request.getDogStatus());
+        
+        return DogStatusUpdateResponse.of(
+            updatedPostFound.getId(), 
+            updatedPostFound.getStatus(), 
+            updatedPostFound.getUpdatedAt()
+        );
     }
 
 }

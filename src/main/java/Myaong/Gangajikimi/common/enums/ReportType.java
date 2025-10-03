@@ -10,8 +10,6 @@ public enum ReportType {
     SPAM("스팸/홍보/도배"),
     OFFENSIVE("불쾌한 표현"),
     INAPPROPRIATE("부적절한 내용"),
-    PRIVACY("개인정보 노출"),
-    WRONG_CATEGORY("잘못된 분류"),
     COPYRIGHT("무단 사용");
 
     private final String description;

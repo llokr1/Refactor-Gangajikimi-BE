@@ -1,24 +1,25 @@
 package Myaong.Gangajikimi.postfound.web.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostFoundRequest {
-
-    List<String> dogImages; // 강아지 실제 사진들
 
     @NotNull
     String title; // 제목
 
     @NotNull
-    String dogType; // 강아지 종류
+    String dogType; // 견종 이름
 
     @NotNull
     String dogColor; // 강아지 색깔

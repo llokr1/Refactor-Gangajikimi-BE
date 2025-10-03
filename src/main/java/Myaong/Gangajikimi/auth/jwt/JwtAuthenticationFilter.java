@@ -30,14 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 요청에서 토큰을 추출한다.
         String token = jwtTokenProvider.getTokenFromRequest(request);
 
-
         if(StringUtils.hasText(token)) {
 
             /*
              토큰 재발급 경로는 인증이 필요 없음
               :이미 인증이 안돼서 토큰을 재발급 받는 것이기 때문
             */
-            if (!request.getRequestURI().equals("/api/reissue")) {
+            String requestURI = request.getRequestURI();
+            if (!requestURI.equals("/api/auth/refresh")) {
 
                 // 토큰을 검증한다.
                 jwtTokenProvider.validateJwtToken(token);

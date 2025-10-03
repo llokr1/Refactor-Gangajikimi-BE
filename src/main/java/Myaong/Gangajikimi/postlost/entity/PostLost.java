@@ -2,7 +2,9 @@ package Myaong.Gangajikimi.postlost.entity;
 
 import Myaong.Gangajikimi.common.BaseEntity;
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
+
+import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import jakarta.persistence.*;
@@ -10,11 +12,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,8 +34,8 @@ public class PostLost extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String dogName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dog_type_id", nullable = true)
     private DogType dogType; // 견종
 
     @Column(nullable = false)
@@ -42,6 +44,10 @@ public class PostLost extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DogGender dogGender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DogStatus status; // 강아지 상태 (실종, 목격, 귀가완료)
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
@@ -80,6 +86,7 @@ public class PostLost extends BaseEntity {
         this.dogType = dogType;
         this.dogGender = dogGender;
         this.dogColor = dogColor;
+        this.status = DogStatus.MISSING; // 게시글 작성 시 기본값: 실종
         this.content = content;
         this.lostSpot = lostSpot;
         this.lostDate = lostDate;
@@ -112,12 +119,11 @@ public class PostLost extends BaseEntity {
                 .build();
     }
 
-    public void update(PostLostRequest request, Point lostSpot) {
+    public void update(PostLostRequest request, Point lostSpot, DogType dogType) {
 
-        DogType dogType = DogType.valueOf(request.getDogType());
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
-        this.realImage = request.getDogImages(); // 이미지 업데이트 로직은 실제 정책에 맞게 수정 필요
+        // 이미지 업데이트는 updateImages() 메서드로 별도 처리
         this.title = request.getTitle();
         this.dogName = request.getDogName();
         this.dogType = dogType;
@@ -129,4 +135,14 @@ public class PostLost extends BaseEntity {
         this.lostSpot = lostSpot;
     }
 
+    public void updateImages(List<String> imageKeyNames) {
+        this.realImage = imageKeyNames;
+    }
+
+    /**
+     * 강아지 상태 변경
+     */
+    public void updateStatus(DogStatus status) {
+        this.status = status;
+    }
 }

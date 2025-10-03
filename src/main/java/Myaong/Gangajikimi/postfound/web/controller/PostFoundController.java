@@ -1,6 +1,8 @@
 package Myaong.Gangajikimi.postfound.web.controller;
 
 import Myaong.Gangajikimi.auth.userDetails.CustomUserDetails;
+import Myaong.Gangajikimi.common.dto.DogStatusUpdateRequest;
+import Myaong.Gangajikimi.common.dto.PageResponse;
 import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
@@ -9,9 +11,13 @@ import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
+import Myaong.Gangajikimi.postfound.service.PostFoundQueryService;
 
-import jakarta.validation.Valid;
 import Myaong.Gangajikimi.postfoundreport.service.PostFoundReportService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,25 +31,34 @@ public class PostFoundController implements PostFoundControllerDocs {
 
     private final PostFoundFacade postFoundFacade;
     private final PostFoundReportService postFoundReportService;
+    private final PostFoundQueryService postFoundQueryService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping
-    public ResponseEntity<GlobalResponse> postFound(@Valid @RequestBody PostFoundRequest request,
-
-                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<GlobalResponse> postFound(
+            @RequestPart("data") String dataJson,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserDetails userDetails) throws JsonProcessingException {
 
         Long memberId = userDetails.getId();
+        
+        PostFoundRequest request = objectMapper.readValue(dataJson, PostFoundRequest.class);
 
-        return GlobalResponse.onSuccess(SuccessCode.OK, postFoundFacade.postPostFound(request, memberId));
+        return GlobalResponse.onSuccess(SuccessCode.OK, postFoundFacade.postPostFound(request, memberId, images));
     }
 
-    @PatchMapping("/{postFoundId}")
-    public ResponseEntity<GlobalResponse> updateFound(@Valid @RequestBody PostFoundRequest request, @PathVariable Long postFoundId,
-                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PatchMapping(value = "/{postFoundId}", consumes = "multipart/form-data")
+    public ResponseEntity<GlobalResponse> updateFound(@RequestPart("data") String dataJson,
+                                                     @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                     @PathVariable Long postFoundId,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails) throws JsonProcessingException {
 
         Long memberId = userDetails.getId();
+        
+        PostFoundRequest request = objectMapper.readValue(dataJson, PostFoundRequest.class);
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
-                postFoundFacade.updatePostFound(request, memberId, postFoundId));
+                postFoundFacade.updatePostFound(request, memberId, postFoundId, images));
     }
 
     @DeleteMapping("/{postFoundId}")
@@ -55,6 +70,28 @@ public class PostFoundController implements PostFoundControllerDocs {
         postFoundFacade.deletePostFound(memberId, postFoundId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<GlobalResponse> getFoundPosts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        
+        PageResponse response = postFoundQueryService.getFoundPosts(page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @GetMapping("/my-posts")
+    public ResponseEntity<GlobalResponse> getMyFoundPosts(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        
+        Long memberId = userDetails.getId();
+        PageResponse response = postFoundQueryService.getMyFoundPosts(memberId, page, size);
+        
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }
 
     @GetMapping("/{postFoundId}")
@@ -72,6 +109,18 @@ public class PostFoundController implements PostFoundControllerDocs {
 
         Long memberId = userDetails.getId();
         PostFoundReportResponse response = postFoundReportService.reportPostFound(postFoundId, request, memberId);
+
+        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+    }
+
+    @PatchMapping("/{postFoundId}/status")
+    public ResponseEntity<GlobalResponse> updatePostFoundStatus(
+            @PathVariable Long postFoundId,
+            @RequestBody DogStatusUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long memberId = userDetails.getId();
+        var response = postFoundFacade.updatePostFoundStatus(postFoundId, request, memberId);
 
         return GlobalResponse.onSuccess(SuccessCode.OK, response);
     }

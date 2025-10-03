@@ -1,12 +1,15 @@
 package Myaong.Gangajikimi.postfound.web.dto.response;
 
 import Myaong.Gangajikimi.common.enums.DogGender;
-import Myaong.Gangajikimi.common.enums.DogType;
+import Myaong.Gangajikimi.common.enums.DogStatus;
+import Myaong.Gangajikimi.dogtype.entity.DogType;
+
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class PostFoundDetailResponse {
@@ -14,9 +17,10 @@ public class PostFoundDetailResponse {
     private Long postId;
     private String title;
     private String dogName;
-    private DogType dogType;
+    private String dogType;
     private String dogColor;
     private DogGender dogGender;
+    private DogStatus dogStatus;
     private String content;
     private LocalDate foundDate;
     private LocalDateTime foundTime;
@@ -24,9 +28,9 @@ public class PostFoundDetailResponse {
     private Double latitude;
     // TODO: 주소 변환 API 연동 후 활성화
     // private String address;
-    // TODO: Cloud 스토리지 연동 후 활성화
-    // private String aiImage;
-    // private List<String> realImages;
+    // TODO: AI 이미지 생성 로직 구현 후 활성화
+    // private String aiImage; // AI 생성 이미지 Presigned URL
+    private List<String> realImages; // 실제 이미지 Presigned URL 목록
     private Long authorId;
     private String authorName;
     private LocalDateTime createdAt;
@@ -35,9 +39,10 @@ public class PostFoundDetailResponse {
     @Builder
     private PostFoundDetailResponse(Long postId,
                                     String title,
-                                    DogType dogType,
+                                    String dogType,
                                     String dogColor,
                                     DogGender dogGender,
+                                    DogStatus dogStatus,
                                     String content,
                                     LocalDate foundDate,
                                     LocalDateTime foundTime,
@@ -45,8 +50,9 @@ public class PostFoundDetailResponse {
                                     Double latitude,
                                     // TODO: 주소 변환 API 연동 후 활성화
                                     // String address,
-                                    // TODO: Cloud 스토리지 연동 후 활성화
-                                    // String aiImage, List<String> realImages,
+                                    // TODO: AI 이미지 생성 로직 구현 후 활성화
+                                    // String aiImage,
+                                    List<String> realImages,
                                     Long authorId,
                                     String authorName,
                                     LocalDateTime createdAt, String timeAgo) {
@@ -55,6 +61,7 @@ public class PostFoundDetailResponse {
         this.dogType = dogType;
         this.dogColor = dogColor;
         this.dogGender = dogGender;
+        this.dogStatus = dogStatus;
         this.content = content;
         this.foundDate = foundDate;
         this.foundTime = foundTime;
@@ -62,9 +69,9 @@ public class PostFoundDetailResponse {
         this.latitude = latitude;
         // TODO: 주소 변환 API 연동 후 활성화
         // this.address = address;
-        // TODO: Cloud 스토리지 연동 후 활성화
+        // TODO: AI 이미지 생성 로직 구현 후 활성화
         // this.aiImage = aiImage;
-        // this.realImages = realImages;
+        this.realImages = realImages;
         this.authorId = authorId;
         this.authorName = authorName;
         this.createdAt = createdAt;
@@ -73,9 +80,10 @@ public class PostFoundDetailResponse {
 
     public static PostFoundDetailResponse of(Long postId,
                                              String title,
-                                             DogType dogType,
+                                             String dogType,
                                              String dogColor,
                                              DogGender dogGender,
+                                             DogStatus dogStatus,
                                              String content,
                                              LocalDate foundDate,
                                              LocalDateTime foundTime,
@@ -83,8 +91,9 @@ public class PostFoundDetailResponse {
                                              Double latitude,
                                              // TODO: 주소 변환 API 연동 후 활성화
                                              // String address,
-                                             // TODO: Cloud 스토리지 연동 후 활성화
-                                             // String aiImage, List<String> realImages,
+                                             // TODO: AI 이미지 생성 로직 구현 후 활성화
+                                             // String aiImage,
+                                             List<String> realImages,
                                              Long authorId,
                                              String authorName,
                                              LocalDateTime createdAt,
@@ -95,6 +104,7 @@ public class PostFoundDetailResponse {
                 .dogType(dogType)
                 .dogColor(dogColor)
                 .dogGender(dogGender)
+                .dogStatus(dogStatus)
                 .content(content)
                 .foundDate(foundDate)
                 .foundTime(foundTime)
@@ -102,9 +112,9 @@ public class PostFoundDetailResponse {
                 .latitude(latitude)
                 // TODO: 주소 변환 API 연동 후 활성화
                 // .address(address)
-                // TODO: Cloud 스토리지 연동 후 활성화
+                // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // .aiImage(aiImage)
-                // .realImages(realImages)
+                .realImages(realImages)
                 .authorId(authorId)
                 .authorName(authorName)
                 .createdAt(createdAt)
