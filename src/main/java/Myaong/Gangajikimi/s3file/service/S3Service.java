@@ -2,6 +2,7 @@ package Myaong.Gangajikimi.s3file.service;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class S3Service {
 
 	private final S3Presigner s3Presigner;
@@ -37,8 +39,10 @@ public class S3Service {
             throw new GeneralException(ErrorCode.EMPTY_FILE_EXCEPTION);
         }
         
-        // 파일 크기 체크
-        if (image.getSize() > MAX_FILE_SIZE) {
+        // 파일 크기 체크 (사용자 업로드 파일 크기 로그 출력)
+        long fileSize = image.getSize();
+        if (fileSize > MAX_FILE_SIZE) {
+            log.error("파일 크기 초과: {}MB (제한: 5MB)", String.format("%.2f", fileSize / 1024.0 / 1024.0));
             throw new GeneralException(ErrorCode.FILE_SIZE_EXCEEDED);
         }
         
