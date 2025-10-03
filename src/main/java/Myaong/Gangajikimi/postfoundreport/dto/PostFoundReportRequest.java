@@ -3,11 +3,15 @@ package Myaong.Gangajikimi.postfoundreport.dto;
 import Myaong.Gangajikimi.common.enums.ReportType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostFoundReportRequest {
 
     @NotNull(message = "신고 유형은 필수입니다")
