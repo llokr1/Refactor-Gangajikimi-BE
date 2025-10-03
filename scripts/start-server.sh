@@ -21,8 +21,11 @@ docker run -d --name redis --network gangajikimi-net -p 6379:6379 redis:7
 echo "dockerhub 최신 이미지 Pull 중..."
 docker pull dldnjsgml3054/gangajikimi-server:latest
 
-# 6. 새 애플리케이션 컨테이너 실행 (Redis 호스트를 'redis'로 지정)
+# 6. 새 애플리케이션 컨테이너 실행 (Redis 호스트를 'redis'로 지정, KST 타임존 설정)
 echo "새 애플리케이션 컨테이너 실행 중..."
-docker run -d --name gangajikimi-server --network gangajikimi-net -p 8080:8080 dldnjsgml3054/gangajikimi-server:latest
+docker run -d --name gangajikimi-server --network gangajikimi-net -p 8080:8080 \
+  -e TZ=Asia/Seoul \
+  -e SPRING_PROFILES_ACTIVE=dev \
+  dldnjsgml3054/gangajikimi-server:latest
 
 echo "--------------- 서버 배포 끝 -----------------"

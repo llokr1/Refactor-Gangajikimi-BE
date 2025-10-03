@@ -40,6 +40,9 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 25MB
 cloud:
   aws:
     s3:

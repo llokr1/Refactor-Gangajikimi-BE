@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(GeneralException.class)
-    public Object handleGeneralException(GeneralException e) {
+    public ResponseEntity<GlobalResponse> handleGeneralException(GeneralException e) {
         ErrorCode errorCode = e.getErrorCode();
 
         return GlobalResponse.onFailure(errorCode);
@@ -46,6 +47,13 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         return GlobalResponse.onFailure(errorCode, errorMessage);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class) // 파일 크기 초과 예외처리
+    public ResponseEntity<GlobalResponse> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException e) {
+        log.error("파일 크기 초과: {}", e.getMessage());
+        return GlobalResponse.onFailure(ErrorCode.FILE_SIZE_EXCEEDED);
     }
 
 }
