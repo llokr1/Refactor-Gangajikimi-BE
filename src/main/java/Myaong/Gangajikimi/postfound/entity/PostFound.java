@@ -85,7 +85,7 @@ public class PostFound extends BaseEntity {
         this.dogType = dogType;
         this.dogGender = dogGender;
         this.dogColor = dogColor;
-        this.status = DogStatus.MISSING; // 게시글 작성 시 기본값: 실종
+        this.status = DogStatus.SIGHTED; // 게시글 작성 시 기본값: 실종
         this.content = content;
         this.foundSpot = foundSpot;
         this.foundDate = foundDate;
