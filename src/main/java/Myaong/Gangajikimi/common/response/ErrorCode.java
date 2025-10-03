@@ -55,7 +55,6 @@ public enum ErrorCode {
     //DOGTYPE
     DOG_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOGTYPE404", "해당 견종을 찾을 수 없습니다.");
 
-
     private final HttpStatus status;
     private final String code;
     private final String message;

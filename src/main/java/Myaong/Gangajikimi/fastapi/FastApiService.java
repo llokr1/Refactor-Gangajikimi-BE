@@ -3,8 +3,10 @@ package Myaong.Gangajikimi.fastapi;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
 import Myaong.Gangajikimi.dogtype.dto.response.DogBreedResponse;
+import Myaong.Gangajikimi.llm.web.dto.response.LlmResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class FastApiService {
 
+    final String route= "localhost:8000";   //TODO: 추후 FastAPI IP 주소로 변경
+
     private RestTemplate restTemplate; // AppConfig에 rootUri가 설정된 Bean
 
     /**
@@ -31,7 +35,7 @@ public class FastApiService {
      */
     public String analyzeImage(MultipartFile imageFile) throws IOException {
 
-        final String apiPath = "/api/v1/dogbreed";
+        final String apiPath = route + "/api/v1/dogbreed";
 
         // 1. HTTP Header 설정 (multipart/form-data)
         HttpHeaders headers = new HttpHeaders();
@@ -66,6 +70,27 @@ public class FastApiService {
             // 서버 응답이 비어있는 경우 예외 처리
             throw new GeneralException(ErrorCode.AI_SERVER_ERROR);
         }
-
     }
+
+    // 텍스트 - 이미지 또는 텍스트 - 텍스트 매칭 할 때 정보를 FastAPI에게 전송
+    // TODO : 이미지 또는 텍스트 하나 더 전송 로직 추가
+    // 약간 설계: 사진 또는 텍스트 따로 식별 없이 비교할 거끼리 2장씩 보내고 매칭률만 받기
+    public void sendImageInfoToFastApi(LlmResponse llmResponse) {
+
+        final String apiPath = route + "";// TODO: 이미지 비교 요청 API 엔드포인트 추가
+
+        // 1. HTTP 헤더 설정 (보내는 데이터가 JSON임을 명시)
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 2. LlmResponse 객체를 HttpEntity로 감싸기
+        // 이 과정에서 Spring이 LlmResponse 객체를 JSON 문자열로 자동 변환
+        HttpEntity<LlmResponse> requestEntity = new HttpEntity<>(llmResponse, headers);
+
+        System.out.println("FastAPI로 보낼 JSON: " + requestEntity.getBody());
+        // 예상 출력: {"rendered":["Sentence 1","Sentence 2","Sentence 3"]}
+
+        ResponseEntity<String> response = restTemplate.postForEntity(route, requestEntity, String.class);
+    }
+
 }

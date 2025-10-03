@@ -22,7 +22,7 @@ public class PostLostRequest {
     String dogName; // 강아지 이름
 
     @NotNull
-    String dogType; // 견종 이름
+    String dogType; // 강아지 종류
 
     @NotNull
     String dogColor; // 강아지 색깔
@@ -39,9 +39,9 @@ public class PostLostRequest {
     LocalDateTime lostTime; // 잃어버린 시간
 
     @NotNull
-    private double lostLongitude; // 경도
+    String lostLocation; // 잃어버린 장소
 
     @NotNull
-    private double lostLatitude;  // 위도
+    String content; // 내용
 
 }

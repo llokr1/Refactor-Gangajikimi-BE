@@ -49,3 +49,20 @@ cloud:
       bucket: gangajikimi-server   # 버킷 이름
     region: ap-northeast-2          # 서울 리전
 
+gemini:
+  api:
+    url: "https://generativelanguage.googleapis.com"
+    key: AQ.Ab8RN6JeFsKpjlxQ9zGLVBungwkdoiODF-Zl7dyphbdF_V8Czg
+    model: gemini-1.5-flash
+
+  ai:
+    vertex:
+      ai:
+        gemini:
+          # Google Cloud 프로젝트 ID
+          project-id: 'YOUR_PROJECT_ID'
+          # 사용할 지역
+          location: 'us-central1'
+          # 사용할 모델
+          model: 'gemini-1.5-pro-preview-0409'
+          # API 키 (환경 변수에서 가져오는 것을 권장)

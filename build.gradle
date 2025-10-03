@@ -68,6 +68,11 @@ dependencies {
 	implementation 'software.amazon.awssdk:s3:2.25.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+    //Gemini
+    implementation("com.google.genai:google-genai:1.8.0")
+
+    implementation 'org.springframework.ai:spring-ai-vertex-ai-gemini'
+
 }
 
 tasks.named('test') {

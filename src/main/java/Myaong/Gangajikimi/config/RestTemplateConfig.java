@@ -12,7 +12,6 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
 
         return builder
-                .rootUri("localhost:8000") //TODO: 추후 FastAPI IP 주소로 변경
                 .build();
 
     }
