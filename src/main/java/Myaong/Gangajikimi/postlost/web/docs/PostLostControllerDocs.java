@@ -75,6 +75,11 @@ public interface PostLostControllerDocs {
         description = """
             기존 분실물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다.
             
+            **이미지 수정 기능:**
+            - existingImageUrls: 유지할 기존 이미지 URL들
+            - deletedImageUrls: 삭제할 이미지 URL들
+            - images: 새로 추가할 이미지 파일들
+            
             **작성 예시(data)**:
             ```json
             {
@@ -87,7 +92,9 @@ public interface PostLostControllerDocs {
               "lostDate": [2024, 1, 1],
               "lostTime": [2024, 1, 1, 14, 30, 0, 0],
               "lostLongitude": 127.0276,
-              "lostLatitude": 37.4979
+              "lostLatitude": 37.4979,
+              "existingImageUrls": ["https://s3.amazonaws.com/bucket/presigned-url1"],
+              "deletedImageUrls": ["https://s3.amazonaws.com/bucket/presigned-url2"]
             }
             ```
             """

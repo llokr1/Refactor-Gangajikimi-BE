@@ -7,6 +7,7 @@ import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostFoundFacade;
 import Myaong.Gangajikimi.postfound.web.docs.PostFoundControllerDocs;
+import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundUpdateRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportRequest;
 import Myaong.Gangajikimi.postfoundreport.dto.PostFoundReportResponse;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
@@ -55,7 +56,7 @@ public class PostFoundController implements PostFoundControllerDocs {
 
         Long memberId = userDetails.getId();
         
-        PostFoundRequest request = objectMapper.readValue(dataJson, PostFoundRequest.class);
+        PostFoundUpdateRequest request = objectMapper.readValue(dataJson, PostFoundUpdateRequest.class);
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
                 postFoundFacade.updatePostFound(request, memberId, postFoundId, images));

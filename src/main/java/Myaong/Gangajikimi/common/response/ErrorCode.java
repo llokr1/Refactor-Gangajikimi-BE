@@ -48,6 +48,7 @@ public enum ErrorCode {
     NO_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3402", "파일에 확장자가 없습니다."),
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3403", "지원하지 않는 파일 확장자입니다. (jpg, jpeg, png, gif 만 허용)"),
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "S3404", "파일 크기가 제한을 초과했습니다. (최대 5MB)"),
+    INVALID_S3_URL(HttpStatus.BAD_REQUEST, "S3405", "유효하지 않은 S3 URL입니다."),
     IO_EXCEPTION_ON_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "S3501", "이미지 업로드 중 IO 예외가 발생했습니다."),
     IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "S3502", "이미지 삭제 중 예외가 발생했습니다."),
     PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3503", "S3에 파일 업로드 중 예외가 발생했습니다."),

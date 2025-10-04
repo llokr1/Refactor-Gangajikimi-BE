@@ -9,6 +9,7 @@ import Myaong.Gangajikimi.postfound.service.PostFoundCommandService;
 
 import Myaong.Gangajikimi.postfound.service.PostFoundQueryService;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
+import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundUpdateRequest;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundResponse;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundDetailResponse;
 import Myaong.Gangajikimi.templocation.service.TempLocationService;
@@ -46,7 +47,10 @@ public class PostFoundFacade {
     }
 
     @Transactional
-    public PostFoundResponse updatePostFound(PostFoundRequest request, Long memberId, Long postFoundId, List<MultipartFile> images){
+    public PostFoundResponse updatePostFound(PostFoundUpdateRequest request,
+                                             Long memberId,
+                                             Long postFoundId,
+                                             List<MultipartFile> images){
 
         // Member 조회
         Member member = memberService.findMemberById(memberId);

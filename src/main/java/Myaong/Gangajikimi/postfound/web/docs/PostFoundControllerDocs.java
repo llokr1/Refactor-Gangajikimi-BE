@@ -177,7 +177,12 @@ public interface PostFoundControllerDocs {
         description = """
             기존 습득물 게시글을 수정합니다. 본인이 작성한 게시글만 수정할 수 있습니다.
             
-                        **작성 예시(data)**:
+            **이미지 수정 기능:**
+            - existingImageUrls: 유지할 기존 이미지 URL들
+            - deletedImageUrls: 삭제할 이미지 URL들
+            - images: 새로 추가할 이미지 파일들
+            
+            **작성 예시(data)**:
             ```json
             {
               "title": "강아지를 주웠습니다",
@@ -188,7 +193,9 @@ public interface PostFoundControllerDocs {
               "foundDate": [2024, 1, 1],
               "foundTime": [2024, 1, 1, 14, 30, 0, 0],
               "foundLongitude": 127.0276,
-              "foundLatitude": 37.4979
+              "foundLatitude": 37.4979,
+              "existingImageUrls": ["https://s3.amazonaws.com/bucket/presigned-url1"],
+              "deletedImageUrls": ["https://s3.amazonaws.com/bucket/presigned-url2"]
             }
             ```
             """

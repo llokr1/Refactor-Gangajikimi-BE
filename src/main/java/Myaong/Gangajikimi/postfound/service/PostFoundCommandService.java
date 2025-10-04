@@ -11,6 +11,7 @@ import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postfound.entity.PostFound;
 import Myaong.Gangajikimi.postfound.repository.PostFoundRepository;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
+import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundUpdateRequest;
 import Myaong.Gangajikimi.s3file.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
@@ -68,7 +69,10 @@ public class PostFoundCommandService {
         return savedPostFound;
     }
 
-    public PostFound updatePostFound(PostFoundRequest request, Member member, PostFound postFound, List<MultipartFile> images){
+    public PostFound updatePostFound(PostFoundUpdateRequest request,
+                                     Member member,
+                                     PostFound postFound,
+                                     List<MultipartFile> images){
 
         // 권한 확인
         if(!member.equals(postFound.getMember())){
@@ -78,11 +82,27 @@ public class PostFoundCommandService {
         Point point = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
 
         // 기존 이미지 삭제 (S3에서)
+        /*
         if (postFound.getRealImage() != null && !postFound.getRealImage().isEmpty()) {
             postFound.getRealImage().forEach(s3Service::deleteFile);
         }
+         */
 
-        // 새 이미지 업로드
+        // 1. 삭제할 이미지 처리
+        if (request.getDeletedImageUrls() != null && !request.getDeletedImageUrls().isEmpty()) {
+            // 삭제할 이미지들의 키 추출
+            List<String> deletedImageKeys = request.getDeletedImageUrls().stream()
+                    .map(s3Service::extractKeyFromUrl)
+                    .toList();
+
+            // S3에서 파일 삭제
+            deletedImageKeys.forEach(s3Service::deleteFile);
+
+            // DB에서 이미지 제거
+            postFound.removeImages(deletedImageKeys);
+        }
+
+        // 2. 새 이미지 업로드
         List<String> newImageKeyNames = new ArrayList<>();
         if (images != null && !images.isEmpty()) {
             newImageKeyNames = images.stream()
@@ -90,13 +110,17 @@ public class PostFoundCommandService {
                     .map(image -> s3Service.upload(image, "postFound", postFound.getId().toString()))
                     .toList();
         }
-
-        // 게시글 정보 업데이트 (이미지 제외)
+        
+        // 3. 새 이미지들을 기존 이미지에 추가
+        if (!newImageKeyNames.isEmpty()) {
+            postFound.addImages(newImageKeyNames);
+        }
+        
+        // 4. 게시글 정보 업데이트 (이미지 제외)
         DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         postFound.update(request, point, dogType);
         
-        // 새 이미지 keyName으로 업데이트
-        postFound.updateImages(newImageKeyNames);
+
 
         return postFound;
     }

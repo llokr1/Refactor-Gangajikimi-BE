@@ -11,6 +11,7 @@ import Myaong.Gangajikimi.member.entity.Member;
 import Myaong.Gangajikimi.postlost.entity.PostLost;
 import Myaong.Gangajikimi.postlost.repository.PostLostRepository;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.s3file.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
@@ -69,7 +70,7 @@ public class PostLostCommandService {
         return savedPostLost;
     }
 
-    public PostLost updatePostLost(PostLostRequest request, Member member, PostLost postLost, List<MultipartFile> images){
+    public PostLost updatePostLost(PostLostUpdateRequest request, Member member, PostLost postLost, List<MultipartFile> images){
 
         // 권한 확인
         if(!member.equals(postLost.getMember())){
@@ -78,10 +79,21 @@ public class PostLostCommandService {
 
         Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
 
-        // 기존 이미지 삭제 (S3에서) - stream 사용
-        postLost.getRealImage().forEach(s3Service::deleteFile);
+        // 1. 삭제할 이미지 처리
+        if (request.getDeletedImageUrls() != null && !request.getDeletedImageUrls().isEmpty()) {
+            // 삭제할 이미지들의 키 추출
+            List<String> deletedImageKeys = request.getDeletedImageUrls().stream()
+                    .map(s3Service::extractKeyFromUrl)
+                    .toList();
 
-        // 새 이미지 업로드 (stream 사용)
+            // S3에서 파일 삭제
+            deletedImageKeys.forEach(s3Service::deleteFile);
+
+            // DB에서 이미지 제거
+            postLost.removeImages(deletedImageKeys);
+        }
+
+        // 2. 새 이미지 업로드
         List<String> newImageKeyNames = new ArrayList<>();
         if (images != null && !images.isEmpty()) {
             newImageKeyNames = images.stream()
@@ -89,13 +101,15 @@ public class PostLostCommandService {
                     .map(image -> s3Service.upload(image, "postLost", postLost.getId().toString()))
                     .toList();
         }
-
-        // 게시글 정보 업데이트 (이미지 제외)
+        
+        // 3. 새 이미지들을 기존 이미지에 추가
+        if (!newImageKeyNames.isEmpty()) {
+            postLost.addImages(newImageKeyNames);
+        }
+        
+        // 4. 게시글 정보 업데이트 (이미지 제외)
         DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         postLost.update(request, point, dogType);
-        
-        // 새 이미지 keyName으로 업데이트
-        postLost.updateImages(newImageKeyNames);
 
         return postLost;
     }
