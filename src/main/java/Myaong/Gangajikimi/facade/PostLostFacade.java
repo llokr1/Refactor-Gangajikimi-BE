@@ -8,6 +8,7 @@ import Myaong.Gangajikimi.postlost.entity.PostLost;
 import Myaong.Gangajikimi.postlost.service.PostLostCommandService;
 import Myaong.Gangajikimi.postlost.service.PostLostQueryService;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostPostResponse;
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
 import jakarta.transaction.Transactional;
@@ -42,7 +43,7 @@ public class PostLostFacade {
     }
 
     @Transactional
-    public PostLostPostResponse updatePostLost(PostLostRequest request, Long memberId, Long postLostId, List<MultipartFile> images){
+    public PostLostPostResponse updatePostLost(PostLostUpdateRequest request, Long memberId, Long postLostId, List<MultipartFile> images){
 
         // Member 조회
         Member member = memberService.findMemberById(memberId);

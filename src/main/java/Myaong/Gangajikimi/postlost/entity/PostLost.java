@@ -6,7 +6,7 @@ import Myaong.Gangajikimi.common.enums.DogStatus;
 
 import Myaong.Gangajikimi.dogtype.entity.DogType;
 import Myaong.Gangajikimi.member.entity.Member;
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
+import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -119,7 +119,7 @@ public class PostLost extends BaseEntity {
                 .build();
     }
 
-    public void update(PostLostRequest request, Point lostSpot, DogType dogType) {
+    public void update(PostLostUpdateRequest request, Point lostSpot, DogType dogType) {
 
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
@@ -137,6 +137,25 @@ public class PostLost extends BaseEntity {
 
     public void updateImages(List<String> imageKeyNames) {
         this.realImage = imageKeyNames;
+    }
+
+    /**
+     * 이미지 추가 (기존 이미지에 새 이미지들 추가)
+     */
+    public void addImages(List<String> imageKeyNames) {
+        if (this.realImage == null) {
+            this.realImage = new ArrayList<>();
+        }
+        this.realImage.addAll(imageKeyNames);
+    }
+
+    /**
+     * 이미지 삭제 (특정 이미지들 제거)
+     */
+    public void removeImages(List<String> imageKeyNames) {
+        if (this.realImage != null) {
+            this.realImage.removeAll(imageKeyNames);
+        }
     }
 
     /**
