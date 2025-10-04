@@ -39,9 +39,9 @@ public class PostLostRequest {
     LocalDateTime lostTime; // 잃어버린 시간
 
     @NotNull
-    String lostLocation; // 잃어버린 장소
+    private double lostLongitude; // 경도
 
     @NotNull
-    String content; // 내용
+    private double lostLatitude;  // 위도
 
 }

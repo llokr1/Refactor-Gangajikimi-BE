@@ -24,7 +24,7 @@ public class FastApiService {
 
     final String route= "localhost:8000";   //TODO: 추후 FastAPI IP 주소로 변경
 
-    private RestTemplate restTemplate; // AppConfig에 rootUri가 설정된 Bean
+    private final RestTemplate restTemplate; // AppConfig에 rootUri가 설정된 Bean
 
     /**
      * 강아지 이미지를 FastAPI 서버로 전송하여 품종 예측 결과를 문자열로 받아옵니다.

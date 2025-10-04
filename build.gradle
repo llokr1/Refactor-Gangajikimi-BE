@@ -71,8 +71,6 @@ dependencies {
     //Gemini
     implementation("com.google.genai:google-genai:1.8.0")
 
-    implementation 'org.springframework.ai:spring-ai-vertex-ai-gemini'
-
 }
 
 tasks.named('test') {

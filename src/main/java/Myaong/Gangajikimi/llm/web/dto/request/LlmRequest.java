@@ -1,11 +1,14 @@
 package Myaong.Gangajikimi.llm.web.dto.request;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LlmRequest {
 
     String breed;
@@ -13,21 +16,5 @@ public class LlmRequest {
     String colors;
 
     String features;
-
-    @Builder
-    private LlmRequest(String breed, String colors, String features) {
-        this.breed = breed;
-        this.colors = colors;
-        this.features = features;
-    }
-
-    public static LlmRequest of(String breed, String colors, String features) {
-
-        return LlmRequest.builder()
-                .breed(breed)
-                .colors(colors)
-                .features(features)
-                .build();
-    }
 
 }

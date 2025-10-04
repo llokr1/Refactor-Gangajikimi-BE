@@ -35,7 +35,8 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/refresh",
                                 "/api/llm-api/**",
-                                "/ws-chat/**").permitAll() // 웹소켓 연동 허용
+                                "/ws-chat/**",
+                                "/actuator/**").permitAll() // 웹소켓 연동 허용
                         .requestMatchers("GET", "/api/lost-posts", "/api/found-posts").permitAll() // 게시글 목록 조회 공개
                         .requestMatchers("GET", "/api/lost-posts/*", "/api/found-posts/*").permitAll() // 게시글 상세 조회 공개
                         .requestMatchers("/admin/**").hasRole("ADMIN")
