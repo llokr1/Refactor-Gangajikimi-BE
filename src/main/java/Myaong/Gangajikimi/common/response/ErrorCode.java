@@ -40,6 +40,9 @@ public enum ErrorCode {
     CANNOT_REPORT_OWN_POST(HttpStatus.BAD_REQUEST, "POST403", "본인의 게시글은 신고할 수 없습니다."),
     ALREADY_REPORTED(HttpStatus.BAD_REQUEST, "POST404", "이미 신고한 게시글입니다."),
 
+    //FASTAPI
+    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AI500", "AI 서버로부터 응답을 가져오는 데 실패했습니다."),
+
     //S3
     EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "S3401", "파일이 비어 있습니다."),
     NO_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "S3402", "파일에 확장자가 없습니다."),
@@ -51,7 +54,6 @@ public enum ErrorCode {
 
     //DOGTYPE
     DOG_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOGTYPE404", "해당 견종을 찾을 수 없습니다.");
-
 
     private final HttpStatus status;
     private final String code;

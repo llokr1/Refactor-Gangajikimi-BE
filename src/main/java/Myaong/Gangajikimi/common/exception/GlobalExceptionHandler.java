@@ -56,4 +56,18 @@ public class GlobalExceptionHandler {
         return GlobalResponse.onFailure(ErrorCode.FILE_SIZE_EXCEEDED);
     }
 
+    @ExceptionHandler(com.fasterxml.jackson.core.JsonParseException.class) // JSON 파싱 오류 처리
+    public ResponseEntity<GlobalResponse> handleJsonParseException(
+            com.fasterxml.jackson.core.JsonParseException e) {
+        log.error("JSON 파싱 오류: {}", e.getMessage());
+        return GlobalResponse.onFailure(ErrorCode.VALIDATION_FAILED);
+    }
+
+    @ExceptionHandler(com.fasterxml.jackson.databind.JsonMappingException.class) // JSON 매핑 오류 처리
+    public ResponseEntity<GlobalResponse> handleJsonMappingException(
+            com.fasterxml.jackson.databind.JsonMappingException e) {
+        log.error("JSON 매핑 오류: {}", e.getMessage());
+        return GlobalResponse.onFailure(ErrorCode.VALIDATION_FAILED);
+    }
+
 }
