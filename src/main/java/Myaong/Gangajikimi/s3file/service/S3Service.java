@@ -135,11 +135,24 @@ public class S3Service {
 	}
 
     public String extractKeyFromUrl(String presignedUrl) {
-        S3Uri s3Uri = S3Uri.builder()
-                .uri(java.net.URI.create(presignedUrl))
-                .build();
-
-        return s3Uri.key().orElseThrow( () -> new GeneralException(ErrorCode.INVALID_S3_URL));
+        log.info("추출하려는 Presigned URL: {}", presignedUrl);
+        
+        try {
+            // 간단한 URL 파싱 방식
+            java.net.URI uri = java.net.URI.create(presignedUrl);
+            String path = uri.getPath();
+            
+            // 경로에서 첫 번째 '/' 제거
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            
+            log.info("추출된 S3 키: {}", path);
+            return path;
+        } catch (Exception e) {
+            log.error("S3 키 추출 실패: {}", presignedUrl, e);
+            throw new GeneralException(ErrorCode.INVALID_S3_URL);
+        }
     }
 
 	/**
