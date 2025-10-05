@@ -14,6 +14,7 @@ import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.s3file.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostLostCommandService {
 
     private final PostLostRepository postLostRepository;
@@ -80,17 +82,15 @@ public class PostLostCommandService {
         Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
 
         // 1. 삭제할 이미지 처리
+        List<String> deletedImageKeys = new ArrayList<>();
         if (request.getDeletedImageUrls() != null && !request.getDeletedImageUrls().isEmpty()) {
             // 삭제할 이미지들의 키 추출
-            List<String> deletedImageKeys = request.getDeletedImageUrls().stream()
+            deletedImageKeys = request.getDeletedImageUrls().stream()
                     .map(s3Service::extractKeyFromUrl)
                     .toList();
 
             // S3에서 파일 삭제
             deletedImageKeys.forEach(s3Service::deleteFile);
-
-            // DB에서 이미지 제거
-            postLost.removeImages(deletedImageKeys);
         }
 
         // 2. 새 이미지 업로드
@@ -102,16 +102,36 @@ public class PostLostCommandService {
                     .toList();
         }
         
-        // 3. 새 이미지들을 기존 이미지에 추가
-        if (!newImageKeyNames.isEmpty()) {
-            postLost.addImages(newImageKeyNames);
-        }
+        // 3. 순서를 보장하는 이미지 업데이트
+        updateImagesWithOrder(postLost, deletedImageKeys, newImageKeyNames);
         
         // 4. 게시글 정보 업데이트 (이미지 제외)
         DogType dogType = dogTypeService.findByTypeName(request.getDogType());
         postLost.update(request, point, dogType);
 
         return postLost;
+    }
+
+    /**
+     * 순서를 보장하는 이미지 업데이트
+     * 삭제된 이미지의 자리에 뒤의 이미지들이 앞으로 이동하고, 새 이미지는 맨 뒤에 추가
+     */
+    private void updateImagesWithOrder(PostLost postLost, List<String> deletedImageKeys, List<String> newImageKeyNames) {
+        List<String> currentImages = new ArrayList<>(postLost.getRealImage());
+        log.info("현재 이미지 목록: {}", currentImages);
+        log.info("삭제할 이미지들: {}", deletedImageKeys);
+        log.info("새로 추가할 이미지들: {}", newImageKeyNames);
+        
+        // 1. 삭제할 이미지들을 제거
+        currentImages.removeAll(deletedImageKeys);
+        log.info("삭제 후 이미지 목록: {}", currentImages);
+        
+        // 2. 새 이미지들을 맨 뒤에 추가
+        currentImages.addAll(newImageKeyNames);
+        log.info("최종 이미지 목록: {}", currentImages);
+        
+        // 3. 업데이트된 이미지 목록으로 설정
+        postLost.updateImages(currentImages);
     }
 
     public void deletePostLost(PostLost postLost, Member member){
