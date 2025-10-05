@@ -13,6 +13,7 @@ import Myaong.Gangajikimi.postfound.repository.PostFoundRepository;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundRequest;
 import Myaong.Gangajikimi.postfound.web.dto.request.PostFoundUpdateRequest;
 import Myaong.Gangajikimi.s3file.service.S3Service;
+import Myaong.Gangajikimi.kakaoapi.service.KakaoApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -33,6 +34,7 @@ public class PostFoundCommandService {
     private final PostFoundRepository postFoundRepository;
     private final DogTypeService dogTypeService;
     private final S3Service s3Service;
+    private final KakaoApiService kakaoApiService;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public PostFound postPostFound(PostFoundRequest request, Member member, List<MultipartFile> images){
@@ -41,6 +43,9 @@ public class PostFoundCommandService {
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
+
+        // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+        String foundRegion = kakaoApiService.getAddrFromKakaoApi(request.getFoundLongitude(), request.getFoundLatitude());
 
         // 먼저 PostFound를 저장해서 ID를 얻음
         PostFound newPostFound = PostFound.of(null, // 이미지는 나중에 설정
@@ -52,7 +57,8 @@ public class PostFoundCommandService {
                 request.getFeatures(),
                 newPoint,
                 request.getFoundDate(),
-                request.getFoundTime());
+                request.getFoundTime(),
+                foundRegion);
 
         PostFound savedPostFound = postFoundRepository.save(newPostFound);
 
@@ -82,6 +88,9 @@ public class PostFoundCommandService {
         }
 
         Point point = geometryFactory.createPoint(new Coordinate(request.getFoundLongitude(), request.getFoundLatitude()));
+
+        // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+        String foundRegion = kakaoApiService.getAddrFromKakaoApi(request.getFoundLongitude(), request.getFoundLatitude());
 
         // 기존 이미지 삭제 (S3에서)
         /*
@@ -118,7 +127,7 @@ public class PostFoundCommandService {
         
         // 4. 게시글 정보 업데이트 (이미지 제외)
         DogType dogType = dogTypeService.findByTypeName(request.getDogType());
-        postFound.update(request, point, dogType);
+        postFound.update(request, point, dogType, foundRegion);
         
 
 

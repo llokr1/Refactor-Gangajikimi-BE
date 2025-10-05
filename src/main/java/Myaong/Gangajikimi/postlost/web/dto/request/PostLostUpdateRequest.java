@@ -50,3 +50,4 @@ public class PostLostUpdateRequest {
     private List<String> deletedImageUrls;  // 삭제할 이미지 URL들
 
 }
+

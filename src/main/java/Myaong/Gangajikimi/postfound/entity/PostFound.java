@@ -55,6 +55,9 @@ public class PostFound extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime foundTime;
 
+    @Column
+    private String foundRegion;
+
     @Column(nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point foundSpot;
 
@@ -77,7 +80,8 @@ public class PostFound extends BaseEntity {
                       DogGender dogGender,
                       Point foundSpot,
                       LocalDate foundDate,
-                      LocalDateTime foundTime){
+                      LocalDateTime foundTime,
+                      String foundRegion){
 
         this.realImage = realImage;
         this.member = member;
@@ -90,6 +94,7 @@ public class PostFound extends BaseEntity {
         this.foundSpot = foundSpot;
         this.foundDate = foundDate;
         this.foundTime = foundTime;
+        this.foundRegion = foundRegion;
     }
 
     public static PostFound of(List<String> realImage,
@@ -101,7 +106,8 @@ public class PostFound extends BaseEntity {
                                String content,
                                Point foundSpot,
                                LocalDate foundDate,
-                               LocalDateTime foundTime){
+                               LocalDateTime foundTime,
+                               String foundRegion){
 
         return PostFound.builder()
                 .realImage(realImage)
@@ -114,10 +120,11 @@ public class PostFound extends BaseEntity {
                 .foundSpot(foundSpot)
                 .foundDate(foundDate)
                 .foundTime(foundTime)
+                .foundRegion(foundRegion)
                 .build();
     }
 
-    public void update(PostFoundUpdateRequest request, Point foundSpot, DogType dogType) {
+    public void update(PostFoundUpdateRequest request, Point foundSpot, DogType dogType, String foundRegion) {
 
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
@@ -130,6 +137,7 @@ public class PostFound extends BaseEntity {
         this.foundDate = request.getFoundDate();
         this.foundTime = request.getFoundTime();
         this.foundSpot = foundSpot;
+        this.foundRegion = foundRegion;
     }
 
     public void updateImages(List<String> imageKeyNames) {

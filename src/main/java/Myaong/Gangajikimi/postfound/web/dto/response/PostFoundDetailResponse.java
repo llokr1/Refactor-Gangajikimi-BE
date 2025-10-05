@@ -26,8 +26,7 @@ public class PostFoundDetailResponse {
     private LocalDateTime foundTime;
     private Double longitude;
     private Double latitude;
-    // TODO: 주소 변환 API 연동 후 활성화
-    // private String address;
+    private String foundRegion; // 행정구역 정보
     // TODO: AI 이미지 생성 로직 구현 후 활성화
     // private String aiImage; // AI 생성 이미지 Presigned URL
     private List<String> realImages; // 실제 이미지 Presigned URL 목록
@@ -48,8 +47,7 @@ public class PostFoundDetailResponse {
                                     LocalDateTime foundTime,
                                     Double longitude,
                                     Double latitude,
-                                    // TODO: 주소 변환 API 연동 후 활성화
-                                    // String address,
+                                    String foundRegion,
                                     // TODO: AI 이미지 생성 로직 구현 후 활성화
                                     // String aiImage,
                                     List<String> realImages,
@@ -67,8 +65,7 @@ public class PostFoundDetailResponse {
         this.foundTime = foundTime;
         this.longitude = longitude;
         this.latitude = latitude;
-        // TODO: 주소 변환 API 연동 후 활성화
-        // this.address = address;
+        this.foundRegion = foundRegion;
         // TODO: AI 이미지 생성 로직 구현 후 활성화
         // this.aiImage = aiImage;
         this.realImages = realImages;
@@ -89,8 +86,7 @@ public class PostFoundDetailResponse {
                                              LocalDateTime foundTime,
                                              Double longitude,
                                              Double latitude,
-                                             // TODO: 주소 변환 API 연동 후 활성화
-                                             // String address,
+                                             String foundRegion,
                                              // TODO: AI 이미지 생성 로직 구현 후 활성화
                                              // String aiImage,
                                              List<String> realImages,
@@ -110,8 +106,7 @@ public class PostFoundDetailResponse {
                 .foundTime(foundTime)
                 .longitude(longitude)
                 .latitude(latitude)
-                // TODO: 주소 변환 API 연동 후 활성화
-                // .address(address)
+                .foundRegion(foundRegion)
                 // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // .aiImage(aiImage)
                 .realImages(realImages)
