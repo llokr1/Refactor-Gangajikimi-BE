@@ -50,7 +50,7 @@
 
     function connect() {
         const token = document.getElementById("accessToken").value;
-        const socket = new SockJS("http://localhost:8080/ws-chat");
+        const socket = new SockJS(window.location.origin + "/ws-chat");
 
         stompClient = new StompJs.Client({
             webSocketFactory: () => socket,
@@ -67,6 +67,8 @@
                     destination: "/pub/chat",
                     body: JSON.stringify(authMsg)
                 });
+
+
                 log("➡️ Sent AUTH", "sent");
             },
             onStompError: (frame) => {

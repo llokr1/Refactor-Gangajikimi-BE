@@ -59,7 +59,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 					.and(chatMessage.readFlag.eq(false)))
 				.fetchOne();
 
-			// 게시글 요약 (필수)
+			// 게시글 제목, 사진
 			String postTitle = null;
 			String postImageUrl = null;
 
@@ -69,7 +69,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 					.fetchOne();
 				if (lost != null) {
 					postTitle = lost.getTitle();
-					// postImageUrl = lost.getThumbnailUrl();
+					postImageUrl = lost.getAiImage();
 				}
 			} else {
 				var found = queryFactory.selectFrom(qFound)
@@ -77,7 +77,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 					.fetchOne();
 				if (found != null) {
 					postTitle = found.getTitle();
-					// postImageUrl = found.getThumbnailUrl();
+					postImageUrl = found.getAiImage();
 				}
 			}
 
@@ -97,27 +97,22 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 	}
 
 	@Override
-	public Optional<ChatRoom> findByMembersAndPost(
-		Member member1, Member member2, PostType postType, Long postId) {
-
+	public Optional<ChatRoom> findByMembersAndPost(Member member1, Member member2,
+		PostType postType, Long postId) {
 		QChatRoom q = QChatRoom.chatRoom;
 
-		// 멤버 순서 정규화(member1.id < member2.id) 가정
 		Long a = member1.getId();
 		Long b = member2.getId();
-		boolean swap = a > b;
-		Member m1 = swap ? member2 : member1;
-		Member m2 = swap ? member1 : member2;
 
 		ChatRoom result = queryFactory
 			.selectFrom(q)
 			.where(
-				q.member1.eq(m1)
-					.and(q.member2.eq(m2))
-					.and(q.postType.eq(postType))
-					.and(q.postId.eq(postId))
+				q.postType.eq(postType),
+				q.postId.eq(postId),
+				q.member1.id.eq(a).and(q.member2.id.eq(b))
+					.or(q.member1.id.eq(b).and(q.member2.id.eq(a)))
 			)
-			.fetchOne();
+			.fetchFirst();
 
 		return Optional.ofNullable(result);
 	}
