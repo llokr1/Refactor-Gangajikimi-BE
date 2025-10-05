@@ -49,13 +49,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			.findByMembersAndPost(member1, member2, req.getPostType(), req.getPostId())
 			.map(converter::toResponse)
 			.orElseGet(() -> {
-				// 4) 없으면 생성
+				// 저장 직전 정규화
+				Member m1 = member1.getId() <= member2.getId() ? member1 : member2;
+				Member m2 = member1.getId() <= member2.getId() ? member2 : member1;
+
 				ChatRoom newRoom = ChatRoom.builder()
-					.member1(member1)
-					.member2(member2)
-					.postType(req.getPostType()) // NOT NULL 전제
-					.postId(req.getPostId())     // NOT NULL 전제
+					.member1(m1)
+					.member2(m2)
+					.postType(req.getPostType())
+					.postId(req.getPostId())
 					.build();
+
 				return converter.toResponse(chatRoomRepository.save(newRoom));
 			});
 	}
