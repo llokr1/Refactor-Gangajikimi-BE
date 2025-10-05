@@ -8,10 +8,10 @@ import Myaong.Gangajikimi.common.response.GlobalResponse;
 import Myaong.Gangajikimi.common.response.SuccessCode;
 import Myaong.Gangajikimi.facade.PostLostFacade;
 import Myaong.Gangajikimi.postlost.web.docs.PostLostControllerDocs;
+import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.postlostreport.service.PostLostReportService;
 import Myaong.Gangajikimi.postlostreport.dto.PostLostReportRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
-import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.postlost.service.PostLostQueryService;
 
 import Myaong.Gangajikimi.postlost.web.dto.response.PostLostDetailResponse;
@@ -58,6 +58,7 @@ public class PostLostController implements PostLostControllerDocs {
         Long memberId = userDetails.getId();
         
         PostLostUpdateRequest request = objectMapper.readValue(dataJson, PostLostUpdateRequest.class);
+
 
         return GlobalResponse.onSuccess(SuccessCode.OK,
                 postLostFacade.updatePostLost(request, memberId, postLostId, images));

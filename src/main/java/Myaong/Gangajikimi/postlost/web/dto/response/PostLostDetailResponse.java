@@ -25,8 +25,7 @@ public class PostLostDetailResponse {
     private LocalDateTime lostTime;
     private Double longitude;
     private Double latitude;
-    // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
-    // private String address;
+    private String lostRegion; // 행정구역 정보
     // TODO: AI 이미지 생성 로직 구현 후 활성화
     // private String aiImage; // AI 생성 이미지 Presigned URL
     private List<String> realImages; // 실제 이미지 Presigned URL 목록
@@ -39,8 +38,7 @@ public class PostLostDetailResponse {
     private PostLostDetailResponse(Long postId, String title, String dogName, String dogType,
                                   String dogColor, DogGender dogGender, DogStatus dogStatus, String content,
                                   LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
-                                  // TODO: 주소 변환 API 연동 후 활성화
-                                  // String address,
+                                  String lostRegion,
                                   // TODO: AI 이미지 생성 로직 구현 후 활성화
                                   // String aiImage, 
                                   List<String> realImages,
@@ -58,8 +56,7 @@ public class PostLostDetailResponse {
         this.lostTime = lostTime;
         this.longitude = longitude;
         this.latitude = latitude;
-        // TODO: 주소 변환 API 연동 후 활성화
-        // this.address = address;
+        this.lostRegion = lostRegion;
         // TODO: AI 이미지 생성 로직 구현 후 활성화
         // this.aiImage = aiImage;
         this.realImages = realImages;
@@ -72,8 +69,7 @@ public class PostLostDetailResponse {
     public static PostLostDetailResponse of(Long postId, String title, String dogName, String dogType,
                                           String dogColor, DogGender dogGender, DogStatus dogStatus, String content,
                                           LocalDate lostDate, LocalDateTime lostTime, Double longitude, Double latitude,
-                                          // TODO: 주소 변환 API 연동 후 활성화
-                                          // String address,
+                                          String lostRegion,
                                           // TODO: AI 이미지 생성 로직 구현 후 활성화
                                           // String aiImage, 
                                           List<String> realImages,
@@ -92,8 +88,7 @@ public class PostLostDetailResponse {
                 .lostTime(lostTime)
                 .longitude(longitude)
                 .latitude(latitude)
-                // TODO: 주소 변환 API 연동 후 활성화
-                // .address(address)
+                .lostRegion(lostRegion)
                 // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // .aiImage(aiImage)
                 .realImages(realImages)

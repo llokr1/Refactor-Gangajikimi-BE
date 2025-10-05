@@ -54,7 +54,12 @@ public enum ErrorCode {
     PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3503", "S3에 파일 업로드 중 예외가 발생했습니다."),
 
     //DOGTYPE
-    DOG_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOGTYPE404", "해당 견종을 찾을 수 없습니다.");
+    DOG_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOGTYPE404", "해당 견종을 찾을 수 없습니다."),
+
+    //KAKAO
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION404", "행정구역 정보를 불러올 수 없습니다."),
+    KAKAO_SERVICE_AREA_ERROR(HttpStatus.BAD_REQUEST, "KAKAO400", "서비스 영역 밖의 주소입니다. 대한민국 내 주소를 입력해주세요.");
+
 
     private final HttpStatus status;
     private final String code;

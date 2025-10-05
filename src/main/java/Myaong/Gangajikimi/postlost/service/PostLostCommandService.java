@@ -13,6 +13,7 @@ import Myaong.Gangajikimi.postlost.repository.PostLostRepository;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostRequest;
 import Myaong.Gangajikimi.postlost.web.dto.request.PostLostUpdateRequest;
 import Myaong.Gangajikimi.s3file.service.S3Service;
+import Myaong.Gangajikimi.kakaoapi.service.KakaoApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -33,6 +34,7 @@ public class PostLostCommandService {
     private final PostLostRepository postLostRepository;
     private final DogTypeService dogTypeService;
     private final S3Service s3Service;
+    private final KakaoApiService kakaoApiService;
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public PostLost postPostLost(PostLostRequest request, Member member, List<MultipartFile> images){
@@ -41,6 +43,8 @@ public class PostLostCommandService {
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
         Point newPoint = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
+
+        String lostRegion = kakaoApiService.getAddrFromKakaoApi(request.getLostLongitude(), request.getLostLatitude());
 
         // 먼저 PostLost를 저장해서 ID를 얻음
         PostLost newPostLost = PostLost.of(null, // 이미지는 나중에 설정
@@ -53,7 +57,8 @@ public class PostLostCommandService {
                 request.getFeatures(),
                 newPoint,
                 request.getLostDate(),
-                request.getLostTime());
+                request.getLostTime(),
+                lostRegion);
 
         PostLost savedPostLost = postLostRepository.save(newPostLost);
 
@@ -81,6 +86,9 @@ public class PostLostCommandService {
 
         Point point = geometryFactory.createPoint(new Coordinate(request.getLostLongitude(), request.getLostLatitude()));
 
+        // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
+        String lostRegion = kakaoApiService.getAddrFromKakaoApi(request.getLostLongitude(), request.getLostLatitude());
+
         // 1. 삭제할 이미지 처리
         List<String> deletedImageKeys = new ArrayList<>();
         if (request.getDeletedImageUrls() != null && !request.getDeletedImageUrls().isEmpty()) {
@@ -107,7 +115,7 @@ public class PostLostCommandService {
         
         // 4. 게시글 정보 업데이트 (이미지 제외)
         DogType dogType = dogTypeService.findByTypeName(request.getDogType());
-        postLost.update(request, point, dogType);
+        postLost.update(request, point, dogType, lostRegion);
 
         return postLost;
     }

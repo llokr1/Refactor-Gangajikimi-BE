@@ -63,8 +63,7 @@ public class PostLostQueryService {
                 postLost.getLostTime(),
                 postLost.getLostSpot().getX(), // longitude
                 postLost.getLostSpot().getY(), // latitude
-                // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
-                // getAddressFromCoordinates(postLost.getLostSpot().getX(), postLost.getLostSpot().getY()),
+                postLost.getLostRegion(), // 행정구역 정보
                 // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // aiImageUrl,
                 realImageUrls,

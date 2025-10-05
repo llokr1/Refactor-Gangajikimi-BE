@@ -50,7 +50,7 @@ public class PostLostHomeResponse {
             .title(postLost.getTitle())
             .dogType(postLost.getDogType() != null ? postLost.getDogType().getType() : "알 수 없음")
             .dogColor(postLost.getDogColor())
-            .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
+            .location(postLost.getLostRegion() != null ? postLost.getLostRegion() : "위치 정보 없음")
             .lostDateTime(postLost.getLostTime())
             .image(presignedImageUrl) // PresignedUrl 사용
             .status(postLost.getStatus())
@@ -66,7 +66,7 @@ public class PostLostHomeResponse {
             .title(postLost.getTitle())
             .dogType(postLost.getDogType() != null ? postLost.getDogType().getType() : "알 수 없음")
             .dogColor(postLost.getDogColor())
-            .location("TODO: 행정동/구 단위 위치 정보") // TODO: 위치 정보 변환 로직 추가
+            .location(postLost.getLostRegion() != null ? postLost.getLostRegion() : "위치 정보 없음")
             .lostDateTime(postLost.getLostTime())
             .image(postLost.getRealImage() != null && !postLost.getRealImage().isEmpty() 
                 ? postLost.getRealImage().get(0) : null) // S3 키 이름 그대로

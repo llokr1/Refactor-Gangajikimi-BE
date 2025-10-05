@@ -58,6 +58,9 @@ public class PostLost extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime lostTime; // 분실 시간
 
+    @Column
+    private String lostRegion;
+
     @JoinColumn(name = "lost_spot", nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point lostSpot; // 분실 장소
 
@@ -78,7 +81,8 @@ public class PostLost extends BaseEntity {
                      String content,
                      Point lostSpot,
                      LocalDate lostDate,
-                     LocalDateTime lostTime){
+                     LocalDateTime lostTime,
+                     String lostRegion){
         this.realImage = realImage;
         this.member = member;
         this.title = title;
@@ -91,6 +95,7 @@ public class PostLost extends BaseEntity {
         this.lostSpot = lostSpot;
         this.lostDate = lostDate;
         this.lostTime = lostTime;
+        this.lostRegion = lostRegion;
     }
 
     public static PostLost of(List<String> realImage,
@@ -103,7 +108,8 @@ public class PostLost extends BaseEntity {
                               String content,
                               Point lostSpot,
                               LocalDate lostDate,
-                              LocalDateTime lostTime){
+                              LocalDateTime lostTime,
+                              String lostRegion){
         return PostLost.builder()
                 .realImage(realImage)
                 .member(member)
@@ -116,10 +122,11 @@ public class PostLost extends BaseEntity {
                 .lostSpot(lostSpot)
                 .lostDate(lostDate)
                 .lostTime(lostTime)
+                .lostRegion(lostRegion)
                 .build();
     }
 
-    public void update(PostLostUpdateRequest request, Point lostSpot, DogType dogType) {
+    public void update(PostLostUpdateRequest request, Point lostSpot, DogType dogType, String lostRegion) {
 
         DogGender dogGender = DogGender.valueOf(request.getDogGender());
 
@@ -133,6 +140,7 @@ public class PostLost extends BaseEntity {
         this.lostDate = request.getLostDate();
         this.lostTime = request.getLostTime();
         this.lostSpot = lostSpot;
+        this.lostRegion = lostRegion;
     }
 
     public void updateImages(List<String> imageKeyNames) {

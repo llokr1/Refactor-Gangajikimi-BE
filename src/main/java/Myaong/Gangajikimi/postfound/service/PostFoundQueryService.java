@@ -1,6 +1,7 @@
 package Myaong.Gangajikimi.postfound.service;
 
 import Myaong.Gangajikimi.common.dto.PageResponse;
+import Myaong.Gangajikimi.kakaoapi.service.KakaoApiService;
 import Myaong.Gangajikimi.postfound.web.dto.response.PostFoundHomeResponse;
 import Myaong.Gangajikimi.common.exception.GeneralException;
 import Myaong.Gangajikimi.common.response.ErrorCode;
@@ -24,6 +25,7 @@ public class PostFoundQueryService {
 
     private final PostFoundRepository postFoundRepository;
     private final S3Service s3Service;
+    private final KakaoApiService kakaoApiService;
 
     public PostFound findPostFoundById(Long postId) {
 
@@ -62,8 +64,7 @@ public class PostFoundQueryService {
                 postFound.getFoundTime(),
                 postFound.getFoundSpot().getX(), // longitude
                 postFound.getFoundSpot().getY(), // latitude
-                // TODO: 주소 변환 API 연동 후 활성화 (예: "서울시 송파구")
-                // getAddressFromCoordinates(postFound.getFoundSpot().getX(), postFound.getFoundSpot().getY()),
+                postFound.getFoundRegion(), // 행정구역 정보
                 // TODO: AI 이미지 생성 로직 구현 후 활성화
                 // aiImageUrl,
                 realImageUrls,

@@ -269,7 +269,7 @@ public interface PostLostControllerDocs {
                                         "title": "강아지를 잃어버렸습니다",
                                         "dogType": "말티즈",
                                         "dogColor": "흰색",
-                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "location": "서울시 서초구",
                                         "lostDateTime": [2024, 1, 1, 14, 30, 0, 0],
                                         "image": "https://s3.amazonaws.com/bucket/presigned-url-example",
                                         "status": "MISSING"
@@ -279,7 +279,7 @@ public interface PostLostControllerDocs {
                                         "title": "골든 리트리버를 잃어버렸습니다",
                                         "dogType": "골든 리트리버",
                                         "dogColor": "갈색",
-                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "location": "서울시 서초구",
                                         "lostDateTime": [2024, 1, 1, 13, 0, 0, 0],
                                         "image": "https://s3.amazonaws.com/bucket/presigned-url-example2",
                                         "status": "SIGHTED"
@@ -329,7 +329,7 @@ public interface PostLostControllerDocs {
                                         "title": "강아지를 잃어버렸습니다",
                                         "dogType": "MALTESE",
                                         "dogColor": "흰색",
-                                        "location": "TODO: 행정동/구 단위 위치 정보",
+                                        "location": "서울시 서초구",
                                         "lostDateTime": [2024, 1, 1, 14, 30, 0, 0],
                                         "image": "https://example.com/image1.jpg",
                                         "type": "LOST",
