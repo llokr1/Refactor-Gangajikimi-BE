@@ -39,54 +39,54 @@ public class LlmService {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-//    double temperature = 0.1;
+    double temperature = 0.1;
 
-    double[] temperature = {0.0, 0.1, 0.2};
+//    double[] temperature = {0.0, 0.1, 0.2};
 
     private final GeminiPrompt geminiPrompt;
 
-    public MultiLlmResponse formattingDogInfo(LlmRequest request) {
-        // 1. API 전체 URL 조합
-        String fullUrl = apiUrl + "?key=" + apiKey;
+//    public MultiLlmResponse formattingDogInfo(LlmRequest request) {
+//        // 1. API 전체 URL 조합
+//        String fullUrl = apiUrl + "?key=" + apiKey;
+//
+//        // 2. 프롬프트 설정
+//        String prompt = geminiPrompt.generatePrompt(request.getBreed(), request.getColors(), request.getFeatures());
+//
+//        List<TemperatureResult> results = new ArrayList<>();
+//
+//        for (int i = 0; i < temperature.length; i++) {
+//
+//            // 3. temperature 설정
+//            GenerationConfig generationConfig = new GenerationConfig(temperature[i]);
+//
+//            //4.
+//            GeminiApiRequest.Part part = new GeminiApiRequest.Part(prompt);
+//            GeminiApiRequest.Content content = new GeminiApiRequest.Content(List.of(part));
+//            GeminiApiRequest requestBody = new GeminiApiRequest(List.of(content), generationConfig);
+//
+//            // 5. HTTP 헤더 설정
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//            HttpEntity<GeminiApiRequest> requestEntity = new HttpEntity<>(requestBody, headers);
+//
+//            // 6. RestTemplate을 사용하여 POST 요청 보내기
+//            GeminiApiResponse response = restTemplate.postForObject(fullUrl, requestEntity, GeminiApiResponse.class);
+//
+//            // 7. 우리가 원하는 형식으로 파싱
+//            LlmResponse llmResponse = parseToLlmResponse(response);
+//
+//            if (response != null) {
+//                //return parseToLlmResponse(response);
+//                results.add(TemperatureResult.from(temperature[i], llmResponse));
+//            } else {
+//                throw new GeneralException(ErrorCode.AI_SERVER_ERROR);
+//            }
+//        }
+//        return new MultiLlmResponse(results);
+//    }
 
-        // 2. 프롬프트 설정
-        String prompt = geminiPrompt.generatePrompt(request.getBreed(), request.getColors(), request.getFeatures());
 
-        List<TemperatureResult> results = new ArrayList<>();
-
-        for (int i = 0; i < temperature.length; i++) {
-
-            // 3. temperature 설정
-            GenerationConfig generationConfig = new GenerationConfig(temperature[i]);
-
-            //4.
-            GeminiApiRequest.Part part = new GeminiApiRequest.Part(prompt);
-            GeminiApiRequest.Content content = new GeminiApiRequest.Content(List.of(part));
-            GeminiApiRequest requestBody = new GeminiApiRequest(List.of(content), generationConfig);
-
-            // 5. HTTP 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            HttpEntity<GeminiApiRequest> requestEntity = new HttpEntity<>(requestBody, headers);
-
-            // 6. RestTemplate을 사용하여 POST 요청 보내기
-            GeminiApiResponse response = restTemplate.postForObject(fullUrl, requestEntity, GeminiApiResponse.class);
-
-            // 7. 우리가 원하는 형식으로 파싱
-            LlmResponse llmResponse = parseToLlmResponse(response);
-
-            if (response != null) {
-//                return parseToLlmResponse(response);
-                results.add(TemperatureResult.from(temperature[i], llmResponse));
-            } else {
-                throw new GeneralException(ErrorCode.AI_SERVER_ERROR);
-            }
-        }
-        return new MultiLlmResponse(results);
-    }
-
-/*
     public LlmResponse formattingDogInfo(LlmRequest request) {
         // 1. API 전체 URL 조합
         String fullUrl = apiUrl + "?key=" + apiKey;
@@ -119,8 +119,6 @@ public class LlmService {
         }
     }
 
-
- */
     private LlmResponse parseToLlmResponse(GeminiApiResponse apiResponse) {
         if (apiResponse == null) {
             return null;
